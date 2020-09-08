@@ -1,0 +1,8 @@
+{
+  "emmet.preferences": {
+    "css.webkitProperties": null
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
+}

@@ -1,0 +1,286 @@
+$light-grey: rgb(223, 223, 223)
+$light-grey-alt: rgb(212, 212, 211)
+$medium-grey: rgb(197, 197, 197)
+$medium-dark-grey: rgb(46, 46, 45)
+$medium-dark-grey-alt: rgb(35, 35, 34)
+$black: rgb(60, 60, 60)
+$apple-silver: #A3AAAE
+$apple-white: #F9F6EF
+$rolex-green: #006039
+$rolex-orange: #a37d2c
+$money-green: #2ecc71
+$money-red: #e74c3c
+
+$shadow10: 0px 0px 10px rgba(0, 0, 0, 0.1)
+$shadow3: 0px 0px 3px rgba(0, 0, 0, 0.1)
+
+$grey29: rgb(29, 29, 28)
+$grey128: rgb(128, 128, 127)
+$grey141: rgb(141, 141, 140)
+$white: rgb(250, 250, 249)
+$green-crt: rgb(16, 32, 20)
+
+$radius: 1.25rem
+
+$border25: 1px solid rgba(0, 0, 0, 0.25)
+$border10: 1px solid rgba(0, 0, 0, 0.1)
+
+$min-width: 12ch
+
+$transition-length: 1s
+
+*
+  margin: 0
+  padding: 0
+  box-sizing: border-box
+
+input
+  -webkit-appearance: none
+  appearance: none
+  border: none
+  color: inherit
+  font-family: inherit
+  font-weight: normal
+  background: none
+  font-size: .9rem
+  overflow-x: scroll
+
+  &:focus
+    outline: none
+
+  &[type="number"]
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button
+      -webkit-appearance: none
+      margin: 0
+
+  &[type="number"]
+    -moz-appearance: textfield
+
+a:link, a:visited, a:hover, a:active
+  color: inherit
+  text-decoration: none
+
+button
+  font-size: .85rem
+  font-weight: 600
+  padding: .25rem
+  border-radius: $radius/3
+  border: none
+  color: $grey128
+  background-color: $light-grey
+
+h1
+  font-size: 1.5rem
+  margin-bottom: .5rem
+
+h2
+  font-size: 1.25rem
+  margin-bottom: .25rem
+
+h3
+  font-size: .9rem
+
+p
+  font-size: .85rem
+
+html, body
+  background-color: $white
+  width: 100%
+  height: 100%
+
+body
+  color: $grey29
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif
+  font-weight: 500
+  display: flex
+  flex-flow: column
+  justify-content: space-between
+
+.login-dialog
+  z-index: 10
+  position: absolute
+  top: 10%
+  left: 50%
+  transform: translate(-50%, -10%)
+  min-width: 320px
+  max-width: 40ch
+  background-color: white
+  box-shadow: $shadow10
+  border-radius: $radius
+  padding: 2rem
+
+  p
+    color: $grey141
+    font-size: .95rem
+    margin-bottom: 1rem
+
+  form
+    display: flex
+    flex-flow: column
+
+    label
+      position: relative
+      text-align: right
+      height: 100%
+      // padding: .25rem
+      border-radius: $radius/3
+      border: $border25
+      box-shadow: $shadow3
+
+      #login-enter
+        color: $grey141
+        font-weight: 400
+        font-size: 1.2rem
+        position: absolute
+        top: 50%
+        right: .25rem
+        transform: translateY(-50%)
+        transition: opacity $transition-length
+
+      input
+        width: 100%
+        height: 100%
+        border: 1px solid #000
+        padding: .25rem
+
+      &:first-child
+        margin-bottom: .5rem
+
+      &::placeholder
+        color: $grey141
+
+.App
+  padding: .5rem
+  padding-bottom: 2rem
+  // width: 100%
+  // height: 100%
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
+  gap: .5rem
+  transition: filter 1s
+
+.blurry
+  filter: blur(3px) grayscale(100)
+
+#entry-form
+  position: relative
+  overflow: hidden
+  border-radius: $radius/1.75
+  display: flex
+  flex-flow: column
+  justify-content: space-between
+
+  .display
+    position: relative
+    flex: 1
+    padding: .3rem .6rem
+    color: $white
+    background-color: black
+    display: flex
+    flex-flow: column
+    justify-content: space-between
+
+    input
+      text-shadow: 0 0 10px rgba(255, 255, 255, .5)
+
+    #display-amount
+      flex: 1
+      text-align: right
+      font-size: 2rem
+
+    ::placeholder
+      color: $grey141
+
+  .categories-selector
+    display: flex
+
+    label
+      position: relative
+      padding: .35rem
+      flex: 1
+      background-color: $light-grey
+      font-size: 1.5rem
+      display: grid
+      justify-items: center
+      align-items: center
+
+      input[type="radio"]
+        width: 100%
+        height: 100%
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+
+.element
+  color: $grey128
+  background: $light-grey
+  border-radius: $radius/1.75
+  padding: .25rem .5rem .5rem .5rem
+
+  ol
+    display: grid
+    grid-template-columns: repeat(3, 1fr) 1.5fr
+    margin-bottom: .2rem
+    padding-bottom: .1rem
+
+    *
+      flex: 1
+
+    >:last-child
+      flex: 2
+
+  .list
+    display: grid
+    // align-items: center
+    grid-auto-rows: 1.75rem
+
+    >:nth-child(odd)
+      background-color: $light-grey-alt
+      border-radius: $radius/4
+
+    .entry
+      height: 100%
+      display: grid
+      grid-template-columns: repeat(3, 1fr) 1.5fr
+
+      p
+        white-space: nowrap
+        display: flex
+        align-items: center
+        overflow-x: scroll
+
+      .icon
+        padding: 0 .2rem
+        display: flex
+        align-items: center
+
+#summary
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr))
+  gap: .5rem
+
+  p
+    text-align: right
+    font-size: 1rem
+
+  .element
+    display: flex
+    flex-flow: column
+    justify-content: space-between
+
+footer
+  margin-top: 1rem
+  color: $grey128
+
+// Dynamic stuff
+
+.hidden
+  visibility: hidden
+
+.highlighted
+  background-color: $light-grey-alt !important
+
+.invisible
+  visibility: hidden
+  display: none
