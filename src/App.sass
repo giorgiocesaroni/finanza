@@ -60,6 +60,9 @@ a:link, a:visited, a:hover, a:active
   color: inherit
   text-decoration: none
 
+li
+  list-style: none
+
 button
   font-size: .85rem
   font-weight: 600
@@ -71,11 +74,9 @@ button
 
 h1
   font-size: 1.5rem
-  margin-bottom: .5rem
 
 h2
   font-size: 1.25rem
-  margin-bottom: .25rem
 
 h3
   font-size: .9rem
@@ -95,6 +96,8 @@ body
   display: flex
   flex-flow: column
   justify-content: space-between
+  padding: .5rem
+  padding-bottom: 2rem
 
 .login-dialog
   z-index: 10
@@ -114,46 +117,7 @@ body
     font-size: .95rem
     margin-bottom: 1rem
 
-  form
-    display: flex
-    flex-flow: column
-
-    label
-      position: relative
-      text-align: right
-      height: 100%
-      // padding: .25rem
-      border-radius: $radius/3
-      border: $border25
-      box-shadow: $shadow3
-
-      #login-enter
-        color: $grey141
-        font-weight: 400
-        font-size: 1.2rem
-        position: absolute
-        top: 50%
-        right: .25rem
-        transform: translateY(-50%)
-        transition: opacity $transition-length
-
-      input
-        width: 100%
-        height: 100%
-        border: 1px solid #000
-        padding: .25rem
-
-      &:first-child
-        margin-bottom: .5rem
-
-      &::placeholder
-        color: $grey141
-
 .App
-  padding: .5rem
-  padding-bottom: 2rem
-  // width: 100%
-  // height: 100%
   display: grid
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
   gap: .5rem
@@ -163,12 +127,16 @@ body
   filter: blur(3px) grayscale(100)
 
 #entry-form
-  position: relative
+  grid-column: 1/-1
+  z-index: 10
+  position: sticky
+  top: .5rem
   overflow: hidden
   border-radius: $radius/1.75
   display: flex
   flex-flow: column
   justify-content: space-between
+  box-shadow: $shadow10
 
   .display
     position: relative
@@ -190,6 +158,13 @@ body
 
     ::placeholder
       color: $grey141
+
+    .notes, .date
+      width: 100%
+
+    .date
+      position: relative
+      opacity: .5
 
   .categories-selector
     display: flex
@@ -213,6 +188,10 @@ body
         transform: translate(-50%, -50%)
 
 .element
+  gap: .5rem
+  display: grid
+  grid-auto-flow: row
+  align-content: start
   color: $grey128
   background: $light-grey
   border-radius: $radius/1.75
@@ -230,9 +209,23 @@ body
     >:last-child
       flex: 2
 
+  ul
+    display: grid
+    grid-auto-flow: column
+    gap: .5rem
+
+    li
+      padding: .25rem .5rem
+      border-radius: $radius/3
+      background-color: $light-grey-alt
+      display: flex
+      flex-flow: column
+
+      p
+        align-self: flex-end
+
   .list
     display: grid
-    // align-items: center
     grid-auto-rows: 1.75rem
 
     >:nth-child(odd)
@@ -240,9 +233,26 @@ body
       border-radius: $radius/4
 
     .entry
+      position: relative
       height: 100%
       display: grid
       grid-template-columns: repeat(3, 1fr) 1.5fr
+      overflow-x: scroll
+      scroll-snap-type: x mandatory
+
+      &::-webkit-scrollbar
+        display: none
+
+      >*
+        scroll-snap-align: start
+
+      .delete
+        z-index: 9
+        position: absolute
+        width: 2rem
+        height: 100%
+        right: 0
+        transform: translateX(100%)
 
       p
         white-space: nowrap
@@ -254,20 +264,6 @@ body
         padding: 0 .2rem
         display: flex
         align-items: center
-
-#summary
-  display: grid
-  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr))
-  gap: .5rem
-
-  p
-    text-align: right
-    font-size: 1rem
-
-  .element
-    display: flex
-    flex-flow: column
-    justify-content: space-between
 
 footer
   margin-top: 1rem

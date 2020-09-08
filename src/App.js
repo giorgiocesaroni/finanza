@@ -23,12 +23,13 @@ class App extends React.Component {
     };
 
     this.toggleEditing = this.toggleEditing.bind(this);
+    this.deleteExpense = this.deleteExpense.bind(this);
   }
 
   componentDidMount() {
     // This sets the current state to the database
-    let db = firebase.database().ref("expenses");
-    db.on("value", (snap) => {
+    this.db = firebase.database().ref("expenses");
+    this.db.on("value", (snap) => {
       this.setState({ database: snap.val() });
     });
   }
@@ -38,6 +39,10 @@ class App extends React.Component {
       return this.setState({ isEditing: state, editId: id });
     }
     return this.setState({ isEditing: false, editId: null });
+  }
+
+  deleteExpense(id) {
+    this.db.child(id).remove();
   }
 
   render() {
@@ -57,10 +62,12 @@ class App extends React.Component {
         <ThisMonth
           database={this.state.database}
           toggleEditing={this.toggleEditing}
+          deleteExpense={this.deleteExpense}
         />
         <LastMonth
           database={this.state.database}
           toggleEditing={this.toggleEditing}
+          deleteExpense={this.deleteExpense}
         />
         <PreviousMonths
           database={this.state.database}

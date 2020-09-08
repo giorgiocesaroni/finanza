@@ -24,9 +24,11 @@ class Form extends React.Component {
 
   handleChange(e) {
     const target = e.target;
-    const value = target.type === "radio" ? target.id : target.value;
+    const value =
+      target.type === "radio"
+        ? target.id
+        : Number(target.value) || target.value;
     const name = target.name;
-
     this.setState({
       [name]: value,
     });
@@ -35,10 +37,17 @@ class Form extends React.Component {
   handleSubmit(e) {
     if (e.keyCode === 13) {
       const state = { ...this.state };
+
       if (!state.date) {
         state.date = String(new Date());
+      } else {
+        state.date = String(new Date(state.date));
+      }
+      if (!state.category) {
+        state.category = "❓";
       }
       console.log(state);
+
       if (this.props.isEditing) {
         firebase
           .database()
@@ -48,6 +57,7 @@ class Form extends React.Component {
       } else {
         firebase.database().ref("expenses").push(state);
       }
+
       return this.setState({
         category: "",
         date: "",
@@ -68,6 +78,7 @@ class Form extends React.Component {
               type="text"
               placeholder="Notes"
               name="notes"
+              className="notes"
             />
             <input
               value={this.state.date}
@@ -75,6 +86,7 @@ class Form extends React.Component {
               type="text"
               placeholder="Date"
               name="date"
+              className="date"
             />
           </div>
           <input
@@ -85,6 +97,7 @@ class Form extends React.Component {
             placeholder="$"
             autoFocus
             name="amount"
+            className="amount"
           />
         </div>
         <div className="categories-selector">

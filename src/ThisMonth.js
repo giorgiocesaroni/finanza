@@ -1,5 +1,6 @@
 import React from "react";
 import { monthDay } from "./utilities";
+import Summary from "./Summary";
 
 class ThisMonth extends React.Component {
   constructor(props) {
@@ -9,6 +10,10 @@ class ThisMonth extends React.Component {
   }
 
   handleClick(k) {
+    if (k.target.id) {
+      this.props.deleteExpense(k.target.id);
+      console.log("deleted");
+    }
     const id = k.target.parentElement.id;
     this.props.toggleEditing(true, id);
   }
@@ -25,12 +30,7 @@ class ThisMonth extends React.Component {
     return (
       <div className="element">
         <h2>This Month</h2>
-        <ol>
-          <p>Category</p>
-          <p>Date</p>
-          <p>Amount</p>
-          <p>Notes</p>
-        </ol>
+        <Summary database={thisMonthDb} />
         <div className="list">
           {Object.keys(thisMonthDb).map((k) => {
             return (
@@ -40,6 +40,13 @@ class ThisMonth extends React.Component {
                   <p>{monthDay(db[k].date)}</p>
                   <p>{db[k].amount}</p>
                   <p>{db[k].notes}</p>
+                  <span
+                    id={k}
+                    onClick={this.handleClick}
+                    className="icon delete"
+                  >
+                    ❌
+                  </span>
                 </div>
               </div>
             );

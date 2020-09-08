@@ -31,6 +31,10 @@ a:link, a:visited, a:hover, a:active {
   text-decoration: none;
 }
 
+li {
+  list-style: none;
+}
+
 button {
   font-size: 0.85rem;
   font-weight: 600;
@@ -43,12 +47,10 @@ button {
 
 h1 {
   font-size: 1.5rem;
-  margin-bottom: 0.5rem;
 }
 
 h2 {
   font-size: 1.25rem;
-  margin-bottom: 0.25rem;
 }
 
 h3 {
@@ -72,6 +74,8 @@ body {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  padding: 0.5rem;
+  padding-bottom: 2rem;
 }
 
 .login-dialog {
@@ -92,44 +96,8 @@ body {
   font-size: 0.95rem;
   margin-bottom: 1rem;
 }
-.login-dialog form {
-  display: flex;
-  flex-flow: column;
-}
-.login-dialog form label {
-  position: relative;
-  text-align: right;
-  height: 100%;
-  border-radius: 0.4166666667rem;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
-}
-.login-dialog form label #login-enter {
-  color: #8d8d8c;
-  font-weight: 400;
-  font-size: 1.2rem;
-  position: absolute;
-  top: 50%;
-  right: 0.25rem;
-  transform: translateY(-50%);
-  transition: opacity 1s;
-}
-.login-dialog form label input {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #000;
-  padding: 0.25rem;
-}
-.login-dialog form label:first-child {
-  margin-bottom: 0.5rem;
-}
-.login-dialog form label::placeholder {
-  color: #8d8d8c;
-}
 
 .App {
-  padding: 0.5rem;
-  padding-bottom: 2rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 0.5rem;
@@ -141,12 +109,16 @@ body {
 }
 
 #entry-form {
-  position: relative;
+  grid-column: 1/-1;
+  z-index: 10;
+  position: sticky;
+  top: 0.5rem;
   overflow: hidden;
   border-radius: 0.7142857143rem;
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 #entry-form .display {
   position: relative;
@@ -168,6 +140,13 @@ body {
 }
 #entry-form .display ::placeholder {
   color: #8d8d8c;
+}
+#entry-form .display .notes, #entry-form .display .date {
+  width: 100%;
+}
+#entry-form .display .date {
+  position: relative;
+  opacity: 0.5;
 }
 #entry-form .categories-selector {
   display: flex;
@@ -192,6 +171,10 @@ body {
 }
 
 .element {
+  gap: 0.5rem;
+  display: grid;
+  grid-auto-flow: row;
+  align-content: start;
   color: #80807f;
   background: #dfdfdf;
   border-radius: 0.7142857143rem;
@@ -209,6 +192,21 @@ body {
 .element ol > :last-child {
   flex: 2;
 }
+.element ul {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0.5rem;
+}
+.element ul li {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.4166666667rem;
+  background-color: #d4d4d3;
+  display: flex;
+  flex-flow: column;
+}
+.element ul li p {
+  align-self: flex-end;
+}
 .element .list {
   display: grid;
   grid-auto-rows: 1.75rem;
@@ -218,9 +216,26 @@ body {
   border-radius: 0.3125rem;
 }
 .element .list .entry {
+  position: relative;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr) 1.5fr;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+.element .list .entry::-webkit-scrollbar {
+  display: none;
+}
+.element .list .entry > * {
+  scroll-snap-align: start;
+}
+.element .list .entry .delete {
+  z-index: 9;
+  position: absolute;
+  width: 2rem;
+  height: 100%;
+  right: 0;
+  transform: translateX(100%);
 }
 .element .list .entry p {
   white-space: nowrap;
@@ -232,21 +247,6 @@ body {
   padding: 0 0.2rem;
   display: flex;
   align-items: center;
-}
-
-#summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12ch, 1fr));
-  gap: 0.5rem;
-}
-#summary p {
-  text-align: right;
-  font-size: 1rem;
-}
-#summary .element {
-  display: flex;
-  flex-flow: column;
-  justify-content: space-between;
 }
 
 footer {
