@@ -1,4 +1,5 @@
 import React from "react";
+import accounting from "accounting";
 
 export default function Summary(props) {
   const expenses = Object.keys(props.database)
@@ -17,15 +18,15 @@ export default function Summary(props) {
     <ul className="summary">
       <li>
         <h3>Expenses</h3>
-        <p>{expenses}</p>
+        <p>{accounting.format(expenses)}</p>
       </li>
       <li>
         <h3>Income</h3>
-        <p>{income}</p>
+        <p>{accounting.format(income)}</p>
       </li>
       <li>
         <h3>Balance</h3>
-        <p>{balance}</p>
+        <p>{accounting.format(balance)}</p>
       </li>
     </ul>
   );

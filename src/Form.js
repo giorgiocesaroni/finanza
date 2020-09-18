@@ -14,9 +14,23 @@ class Form extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.focus = this.focus.bind(this);
+  }
+
+  focus() {
+    this.amountInput.focus();
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.isEditing && !this.props.isEditing) {
+      this.setState({
+        category: "",
+        date: "",
+        amount: "",
+        notes: "",
+      });
+    }
+
     if (prevProps !== this.props) {
       this.setState(this.props.editEntry);
     }
@@ -29,6 +43,7 @@ class Form extends React.Component {
         ? target.id
         : Number(target.value) || target.value;
     const name = target.name;
+
     this.setState({
       [name]: value,
     });
@@ -37,6 +52,13 @@ class Form extends React.Component {
   handleSubmit(e) {
     if (e.keyCode === 13) {
       const state = { ...this.state };
+      if (!state.amount || Number(state.amount) === 0)
+        return this.setState({
+          category: "",
+          date: "",
+          amount: "",
+          notes: "",
+        });
 
       if (!state.date) {
         state.date = String(new Date());
@@ -46,7 +68,6 @@ class Form extends React.Component {
       if (!state.category) {
         state.category = "❓";
       }
-      console.log(state);
 
       if (this.props.isEditing) {
         firebase
@@ -69,8 +90,14 @@ class Form extends React.Component {
 
   render() {
     return (
-      <form id="entry-form" onKeyDown={this.handleSubmit}>
-        <div className="display crt">
+      <form
+        className={
+          this.state.amount < 0 ? "red" : this.state.amount > 0 ? "green" : ""
+        }
+        id="entry-form"
+        onKeyDown={this.handleSubmit}
+      >
+        <div className="display">
           <div>
             <input
               value={this.state.notes}
@@ -90,6 +117,9 @@ class Form extends React.Component {
             />
           </div>
           <input
+            ref={(ref) => {
+              this.amountInput = ref;
+            }}
             value={this.state.amount}
             onChange={this.handleChange}
             id="display-amount"
@@ -106,6 +136,7 @@ class Form extends React.Component {
             let emoji = i[category];
             return (
               <label
+                onClick={this.focus}
                 htmlFor={category}
                 key={category}
                 className={

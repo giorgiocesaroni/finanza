@@ -34,6 +34,10 @@ $transition-length: 1s
   padding: 0
   box-sizing: border-box
 
+html
+  -webkit-tap-highlight-color: transparent
+  -webkit-text-size-adjust: 100%
+
 input
   -webkit-appearance: none
   appearance: none
@@ -43,7 +47,6 @@ input
   font-weight: normal
   background: none
   font-size: .9rem
-  overflow-x: scroll
 
   &:focus
     outline: none
@@ -126,6 +129,18 @@ body
 .blurry
   filter: blur(3px) grayscale(100)
 
+// 
+// State Classes
+.red
+  .display
+    border-bottom: 4px solid#ac1010 !important
+
+.green
+  .display
+    border-bottom: 4px solid#10ac4c !important
+// 
+// 
+
 #entry-form
   grid-column: 1/-1
   z-index: 10
@@ -139,6 +154,7 @@ body
   box-shadow: $shadow10
 
   .display
+    border-bottom: 4px solid transparent
     position: relative
     flex: 1
     padding: .3rem .6rem
@@ -149,10 +165,9 @@ body
     justify-content: space-between
 
     input
-      text-shadow: 0 0 10px rgba(255, 255, 255, .5)
+      // text-shadow: 0 0 10px rgba(255, 255, 255, .5)
 
     #display-amount
-      flex: 1
       text-align: right
       font-size: 2rem
 
@@ -178,6 +193,7 @@ body
       display: grid
       justify-items: center
       align-items: center
+      transition: background-color .15s ease-in-out
 
       input[type="radio"]
         width: 100%
@@ -228,9 +244,16 @@ body
     display: grid
     grid-auto-rows: 1.75rem
 
+    >*
+      border-radius: $radius/4
+      transition: background-color .1s
+
     >:nth-child(odd)
       background-color: $light-grey-alt
-      border-radius: $radius/4
+
+    .blue
+      color: white !important
+      background-color: #4b65d4 !important
 
     .entry
       position: relative
@@ -265,6 +288,12 @@ body
         display: flex
         align-items: center
 
+.copyright
+  width: 100%
+  color: $grey128
+  margin: 1rem 0 2rem 0
+  text-align: center
+
 footer
   margin-top: 1rem
   color: $grey128
@@ -280,3 +309,7 @@ footer
 .invisible
   visibility: hidden
   display: none
+
+.description
+  display: grid
+  grid-template-columns: repeat(3, 1fr) 1.5fr

@@ -1,9 +1,7 @@
 import React from "react";
 import firebase from "./config/Firebase";
 import Form from "./Form";
-import ThisMonth from "./ThisMonth";
-import LastMonth from "./LastMonth";
-import PreviousMonths from "./PreviousMonths";
+import List from "./List";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -19,7 +17,7 @@ class App extends React.Component {
     this.state = {
       database: {},
       isEditing: false,
-      editId: null,
+      editingId: null,
     };
 
     this.toggleEditing = this.toggleEditing.bind(this);
@@ -27,7 +25,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // This sets the current state to the database
     this.db = firebase.database().ref("expenses");
     this.db.on("value", (snap) => {
       this.setState({ database: snap.val() });
@@ -36,9 +33,9 @@ class App extends React.Component {
 
   toggleEditing(state, id) {
     if (state === true && id) {
-      return this.setState({ isEditing: state, editId: id });
+      return this.setState({ isEditing: state, editingId: id });
     }
-    return this.setState({ isEditing: false, editId: null });
+    return this.setState({ isEditing: false, editingId: null });
   }
 
   deleteExpense(id) {
@@ -46,33 +43,73 @@ class App extends React.Component {
   }
 
   render() {
-    let editEntry = this.state.editId
-      ? this.state.database[this.state.editId]
+    const thisMonthDb = Object.keys(this.state.database)
+      .filter(
+        (e) =>
+          new Date(this.state.database[e].date).getMonth() ===
+          new Date().getMonth()
+      )
+      .reduce((acc, key) => {
+        return { ...acc, [key]: this.state.database[key] };
+      }, {});
+
+    const lastMonthDb = Object.keys(this.state.database)
+      .filter(
+        (e) =>
+          new Date(this.state.database[e].date).getMonth() ===
+          new Date().getMonth() - 1
+      )
+      .reduce((acc, key) => {
+        return { ...acc, [key]: this.state.database[key] };
+      }, {});
+
+    const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
+      return { ...acc, [key]: this.state.database[key] };
+    }, {});
+
+    let editEntry = this.state.editingId
+      ? this.state.database[this.state.editingId]
       : null;
 
     return (
-      <div className="App">
-        <Form
-          database={this.state.database}
-          toggleEditing={this.toggleEditing}
-          isEditing={this.state.isEditing}
-          editEntry={editEntry}
-          editId={this.state.editId}
-        />
-        <ThisMonth
-          database={this.state.database}
-          toggleEditing={this.toggleEditing}
-          deleteExpense={this.deleteExpense}
-        />
-        <LastMonth
-          database={this.state.database}
-          toggleEditing={this.toggleEditing}
-          deleteExpense={this.deleteExpense}
-        />
-        <PreviousMonths
-          database={this.state.database}
-          toggleEditing={this.toggleEditing}
-        />
+      <div>
+        <div className="App">
+          <Form
+            database={this.state.database}
+            toggleEditing={this.toggleEditing}
+            isEditing={this.state.isEditing}
+            editEntry={editEntry}
+            editingId={this.state.editingId}
+          />
+          <List
+            title="This Month"
+            database={thisMonthDb}
+            toggleEditing={this.toggleEditing}
+            deleteExpense={this.deleteExpense}
+            isEditing={this.state.isEditing}
+            editingId={this.state.editingId}
+          />
+          <List
+            title="Last Month"
+            database={lastMonthDb}
+            toggleEditing={this.toggleEditing}
+            deleteExpense={this.deleteExpense}
+            isEditing={this.state.isEditing}
+            editingId={this.state.editingId}
+          />
+          <List
+            title="To Date"
+            database={toDateDb}
+            toggleEditing={this.toggleEditing}
+            deleteExpense={this.deleteExpense}
+            isEditing={this.state.isEditing}
+            editingId={this.state.editingId}
+          />
+        </div>
+        <p className="copyright">
+          Copyright &copy; {new Date().getFullYear()} George Cesar. All rights
+          reserved.
+        </p>
       </div>
     );
   }

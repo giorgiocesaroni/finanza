@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
 input {
   -webkit-appearance: none;
   appearance: none;
@@ -13,7 +18,6 @@ input {
   font-weight: normal;
   background: none;
   font-size: 0.9rem;
-  overflow-x: scroll;
 }
 input:focus {
   outline: none;
@@ -108,6 +112,14 @@ body {
   filter: blur(3px) grayscale(100);
 }
 
+.red .display {
+  border-bottom: 4px solid #ac1010 !important;
+}
+
+.green .display {
+  border-bottom: 4px solid #10ac4c !important;
+}
+
 #entry-form {
   grid-column: 1/-1;
   z-index: 10;
@@ -121,6 +133,7 @@ body {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 #entry-form .display {
+  border-bottom: 4px solid transparent;
   position: relative;
   flex: 1;
   padding: 0.3rem 0.6rem;
@@ -130,11 +143,7 @@ body {
   flex-flow: column;
   justify-content: space-between;
 }
-#entry-form .display input {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
 #entry-form .display #display-amount {
-  flex: 1;
   text-align: right;
   font-size: 2rem;
 }
@@ -160,6 +169,7 @@ body {
   display: grid;
   justify-items: center;
   align-items: center;
+  transition: background-color 0.15s ease-in-out;
 }
 #entry-form .categories-selector label input[type=radio] {
   width: 100%;
@@ -211,9 +221,16 @@ body {
   display: grid;
   grid-auto-rows: 1.75rem;
 }
+.element .list > * {
+  border-radius: 0.3125rem;
+  transition: background-color 0.1s;
+}
 .element .list > :nth-child(odd) {
   background-color: #d4d4d3;
-  border-radius: 0.3125rem;
+}
+.element .list .blue {
+  color: white !important;
+  background-color: #4b65d4 !important;
 }
 .element .list .entry {
   position: relative;
@@ -249,6 +266,13 @@ body {
   align-items: center;
 }
 
+.copyright {
+  width: 100%;
+  color: #80807f;
+  margin: 1rem 0 2rem 0;
+  text-align: center;
+}
+
 footer {
   margin-top: 1rem;
   color: #80807f;
@@ -265,6 +289,11 @@ footer {
 .invisible {
   visibility: hidden;
   display: none;
+}
+
+.description {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1.5fr;
 }
 
 /*# sourceMappingURL=App.css.map */
