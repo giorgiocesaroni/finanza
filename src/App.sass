@@ -27,289 +27,296 @@ $border10: 1px solid rgba(0, 0, 0, 0.1)
 
 $min-width: 12ch
 
-$transition-length: 1s
-
 *
-  margin: 0
-  padding: 0
-  box-sizing: border-box
+	margin: 0
+	padding: 0
+	box-sizing: border-box
 
 html
-  -webkit-tap-highlight-color: transparent
-  -webkit-text-size-adjust: 100%
+	-webkit-tap-highlight-color: transparent
+	-webkit-text-size-adjust: 100%
 
 input
-  -webkit-appearance: none
-  appearance: none
-  border: none
-  color: inherit
-  font-family: inherit
-  font-weight: normal
-  background: none
-  font-size: .9rem
+	-webkit-appearance: none
+	appearance: none
+	border: none
+	color: inherit
+	font-family: inherit
+	font-weight: normal
+	background: none
+	font-size: .9rem
 
-  &:focus
-    outline: none
+	&:focus
+		outline: none
 
-  &[type="number"]
-    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button
-      -webkit-appearance: none
-      margin: 0
+	&[type="number"]
+		&::-webkit-inner-spin-button, &::-webkit-outer-spin-button
+			-webkit-appearance: none
+			margin: 0
 
-  &[type="number"]
-    -moz-appearance: textfield
+	&[type="number"]
+		-moz-appearance: textfield
 
 a:link, a:visited, a:hover, a:active
-  color: inherit
-  text-decoration: none
+	color: inherit
+	text-decoration: none
 
 li
-  list-style: none
+	list-style: none
 
 button
-  font-size: .85rem
-  font-weight: 600
-  padding: .25rem
-  border-radius: $radius/3
-  border: none
-  color: $grey128
-  background-color: $light-grey
+	font-size: .85rem
+	font-weight: 600
+	padding: .25rem
+	border-radius: $radius/3
+	border: none
+	color: $grey128
+	background-color: $light-grey
 
 h1
-  font-size: 1.5rem
+	font-size: 1.5rem
 
 h2
-  font-size: 1.25rem
+	font-size: 1.25rem
 
 h3
-  font-size: .9rem
+	font-size: .9rem
 
 p
-  font-size: .85rem
+	font-size: .85rem
 
 html, body
-  background-color: $white
-  width: 100%
-  height: 100%
+	background-color: $white
+	width: 100%
+	height: 100%
 
 body
-  color: $grey29
-  font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif
-  font-weight: 500
-  display: flex
-  flex-flow: column
-  justify-content: space-between
-  padding: .5rem
-  padding-bottom: 2rem
+	color: $grey29
+	font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif
+	font-weight: 500
+	display: flex
+	flex-flow: column
+	justify-content: space-between
+	padding: .5rem
+	padding-bottom: 2rem
 
 .login-dialog
-  z-index: 10
-  position: absolute
-  top: 10%
-  left: 50%
-  transform: translate(-50%, -10%)
-  min-width: 320px
-  max-width: 40ch
-  background-color: white
-  box-shadow: $shadow10
-  border-radius: $radius
-  padding: 2rem
+	z-index: 10
+	position: absolute
+	top: 10%
+	left: 50%
+	transform: translate(-50%, -10%)
+	min-width: 320px
+	max-width: 40ch
+	background-color: white
+	box-shadow: $shadow10
+	border-radius: $radius
+	padding: 2rem
 
-  p
-    color: $grey141
-    font-size: .95rem
-    margin-bottom: 1rem
+	p
+		color: $grey141
+		font-size: .95rem
+		margin-bottom: 1rem
 
 .App
-  display: grid
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
-  gap: .5rem
-  transition: filter 1s
+	display: grid
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
+	gap: .5rem
 
 .blurry
-  filter: blur(3px) grayscale(100)
+	filter: blur(3px) grayscale(100)
 
-// 
-// State Classes
 .red
-  .display
-    border-bottom: 4px solid#ac1010 !important
+	.display
+		border-bottom: 4px solid#ac1010 !important
 
 .green
-  .display
-    border-bottom: 4px solid#10ac4c !important
-// 
-// 
+	.display
+		border-bottom: 4px solid#10ac4c !important
 
 #entry-form
-  grid-column: 1/-1
-  z-index: 10
-  position: sticky
-  top: .5rem
-  overflow: hidden
-  border-radius: $radius/1.75
-  display: flex
-  flex-flow: column
-  justify-content: space-between
-  box-shadow: $shadow10
+	grid-column: 1/-1
+	z-index: 10
+	position: sticky
+	top: .5rem
+	overflow: hidden
+	border-radius: $radius/1.75
+	display: flex
+	flex-flow: column
+	justify-content: space-between
+	box-shadow: $shadow10
 
-  .display
-    border-bottom: 4px solid transparent
-    position: relative
-    flex: 1
-    padding: .3rem .6rem
-    color: $white
-    background-color: black
-    display: flex
-    flex-flow: column
-    justify-content: space-between
+	.display
+		border-bottom: 4px solid transparent
+		position: relative
+		flex: 1
+		padding: .3rem .6rem
+		color: $white
+		background-color: black
+		display: flex
+		flex-flow: column
+		justify-content: space-between
+		transition: border .35s ease-in-out
 
-    input
-      // text-shadow: 0 0 10px rgba(255, 255, 255, .5)
+		input
+			// text-shadow: 0 0 10px rgba(255, 255, 255, .5)
 
-    #display-amount
-      text-align: right
-      font-size: 2rem
+		#display-amount
+			text-align: right
+			font-size: 2rem
 
-    ::placeholder
-      color: $grey141
+		::placeholder
+			color: $grey141
 
-    .notes, .date
-      width: 100%
+		.notes, .date
+			width: 100%
 
-    .date
-      position: relative
-      opacity: .5
+		.date
+			position: relative
+			opacity: .5
 
-  .categories-selector
-    display: flex
+	.categories-selector
+		display: flex
 
-    label
-      position: relative
-      padding: .35rem
-      flex: 1
-      background-color: $light-grey
-      font-size: 1.5rem
-      display: grid
-      justify-items: center
-      align-items: center
-      transition: background-color .15s ease-in-out
+		label
+			position: relative
+			padding: .35rem
+			flex: 1
+			background-color: $light-grey
+			font-size: 1.5rem
+			display: grid
+			justify-items: center
+			align-items: center
 
-      input[type="radio"]
-        width: 100%
-        height: 100%
-        position: absolute
-        top: 50%
-        left: 50%
-        transform: translate(-50%, -50%)
+			input[type="radio"]
+				width: 100%
+				height: 100%
+				position: absolute
+				top: 50%
+				left: 50%
+				transform: translate(-50%, -50%)
 
 .element
-  gap: .5rem
-  display: grid
-  grid-auto-flow: row
-  align-content: start
-  color: $grey128
-  background: $light-grey
-  border-radius: $radius/1.75
-  padding: .25rem .5rem .5rem .5rem
+	gap: .5rem
+	display: grid
+	grid-auto-flow: row
+	align-content: start
+	color: $grey128
+	background: $light-grey
+	border-radius: $radius/1.75
+	padding: .25rem .5rem .5rem .5rem
 
-  ol
-    display: grid
-    grid-template-columns: repeat(3, 1fr) 1.5fr
-    margin-bottom: .2rem
-    padding-bottom: .1rem
+	*
+		-webkit-touch-callout: none
+		-webkit-user-select: none
+		-khtml-user-select: none
+		-moz-user-select: none
+		-ms-user-select: none
+		user-select: none
 
-    *
-      flex: 1
+	ol
+		display: grid
+		grid-template-columns: repeat(3, 1fr) 1.5fr
+		margin-bottom: .2rem
+		padding-bottom: .1rem
 
-    >:last-child
-      flex: 2
+		*
+			flex: 1
 
-  ul
-    display: grid
-    grid-auto-flow: column
-    gap: .5rem
+		>:last-child
+			flex: 2
 
-    li
-      padding: .25rem .5rem
-      border-radius: $radius/3
-      background-color: $light-grey-alt
-      display: flex
-      flex-flow: column
+	ul
+		display: grid
+		grid-auto-flow: column
+		gap: .5rem
 
-      p
-        align-self: flex-end
+		li
+			padding: .25rem .5rem
+			border-radius: $radius/3
+			background-color: $light-grey-alt
+			display: flex
+			flex-flow: column
 
-  .list
-    display: grid
-    grid-auto-rows: 1.75rem
+			p
+				align-self: flex-end
 
-    >*
-      border-radius: $radius/4
-      transition: background-color .1s
+	.list
+		display: grid
+		grid-auto-rows: 1.75rem
+		max-height: calc(1.75rem * 10)
+		overflow-y: scroll
+		scroll-snap-type: y mandatory
 
-    >:nth-child(odd)
-      background-color: $light-grey-alt
+		>div
+			scroll-snap-align: start
 
-    .blue
-      color: white !important
-      background-color: #4b65d4 !important
+		>*
+			border-radius: $radius/4
 
-    .entry
-      position: relative
-      height: 100%
-      display: grid
-      grid-template-columns: repeat(3, 1fr) 1.5fr
-      overflow-x: scroll
-      scroll-snap-type: x mandatory
+		>:nth-child(odd)
+			background-color: $light-grey-alt
 
-      &::-webkit-scrollbar
-        display: none
+		.selected
+			color: white !important
+			background-color: rgb(16, 103, 222) !important
 
-      >*
-        scroll-snap-align: start
+		.entry
+			position: relative
+			height: 100%
+			display: grid
+			grid-template-columns: repeat(3, 1fr) 1.5fr
+			overflow-x: scroll
+			scroll-snap-type: x mandatory
 
-      .delete
-        z-index: 9
-        position: absolute
-        width: 2rem
-        height: 100%
-        right: 0
-        transform: translateX(100%)
+			&::-webkit-scrollbar
+				display: none
 
-      p
-        white-space: nowrap
-        display: flex
-        align-items: center
-        overflow-x: scroll
+			>*
+				scroll-snap-align: start
 
-      .icon
-        padding: 0 .2rem
-        display: flex
-        align-items: center
+			.delete
+				z-index: 9
+				position: absolute
+				width: 2rem
+				height: 100%
+				right: 0
+				transform: translateX(100%)
+
+			p
+				white-space: nowrap
+				display: flex
+				align-items: center
+				overflow-x: scroll
+
+			.icon
+				margin-top: -1px
+				padding: 0 .2rem
+				display: flex
+				align-items: center
 
 .copyright
-  width: 100%
-  color: $grey128
-  margin: 1rem 0 2rem 0
-  text-align: center
+	width: 100%
+	color: $grey128
+	margin: 1rem 0 2rem 0
+	text-align: center
 
 footer
-  margin-top: 1rem
-  color: $grey128
+	margin-top: 1rem
+	color: $grey128
 
 // Dynamic stuff
 
 .hidden
-  visibility: hidden
+	visibility: hidden
 
 .highlighted
-  background-color: $light-grey-alt !important
+	background-color: $light-grey-alt !important
 
 .invisible
-  visibility: hidden
-  display: none
+	visibility: hidden
+	display: none
 
 .description
-  display: grid
-  grid-template-columns: repeat(3, 1fr) 1.5fr
+	display: grid
+	grid-template-columns: repeat(3, 1fr) 1.5fr

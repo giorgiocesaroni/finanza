@@ -105,7 +105,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 0.5rem;
-  transition: filter 1s;
 }
 
 .blurry {
@@ -142,6 +141,7 @@ body {
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  transition: border 0.35s ease-in-out;
 }
 #entry-form .display #display-amount {
   text-align: right;
@@ -169,7 +169,6 @@ body {
   display: grid;
   justify-items: center;
   align-items: center;
-  transition: background-color 0.15s ease-in-out;
 }
 #entry-form .categories-selector label input[type=radio] {
   width: 100%;
@@ -189,6 +188,14 @@ body {
   background: #dfdfdf;
   border-radius: 0.7142857143rem;
   padding: 0.25rem 0.5rem 0.5rem 0.5rem;
+}
+.element * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .element ol {
   display: grid;
@@ -220,17 +227,22 @@ body {
 .element .list {
   display: grid;
   grid-auto-rows: 1.75rem;
+  max-height: calc(1.75rem * 10);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+.element .list > div {
+  scroll-snap-align: start;
 }
 .element .list > * {
   border-radius: 0.3125rem;
-  transition: background-color 0.1s;
 }
 .element .list > :nth-child(odd) {
   background-color: #d4d4d3;
 }
-.element .list .blue {
+.element .list .selected {
   color: white !important;
-  background-color: #4b65d4 !important;
+  background-color: #1067de !important;
 }
 .element .list .entry {
   position: relative;
@@ -261,6 +273,7 @@ body {
   overflow-x: scroll;
 }
 .element .list .entry .icon {
+  margin-top: -1px;
   padding: 0 0.2rem;
   display: flex;
   align-items: center;

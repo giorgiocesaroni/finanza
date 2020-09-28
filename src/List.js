@@ -83,7 +83,7 @@ class List extends React.Component {
               <div
                 className={
                   this.props.isEditing && this.props.editingId === k
-                    ? "blue"
+                    ? "selected"
                     : ""
                 }
                 key={k}

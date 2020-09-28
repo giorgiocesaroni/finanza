@@ -37,6 +37,7 @@ class Form extends React.Component {
   }
 
   handleChange(e) {
+    console.log("handleChange", e);
     const target = e.target;
     const value =
       target.type === "radio"
@@ -47,11 +48,14 @@ class Form extends React.Component {
     this.setState({
       [name]: value,
     });
+    console.log(this.state);
   }
 
   handleSubmit(e) {
     if (e.keyCode === 13) {
+      console.log("handleSubmit");
       const state = { ...this.state };
+
       if (!state.amount || Number(state.amount) === 0)
         return this.setState({
           category: "",
@@ -65,6 +69,7 @@ class Form extends React.Component {
       } else {
         state.date = String(new Date(state.date));
       }
+
       if (!state.category) {
         state.category = "❓";
       }
@@ -72,7 +77,7 @@ class Form extends React.Component {
       if (this.props.isEditing) {
         firebase
           .database()
-          .ref("expenses/" + this.props.editId)
+          .ref("expenses/" + this.props.editingId)
           .set(state);
         this.props.toggleEditing(false);
       } else {
@@ -125,7 +130,7 @@ class Form extends React.Component {
             id="display-amount"
             type="number"
             placeholder="$"
-            autoFocus
+            // autoFocus
             name="amount"
             className="amount"
           />
