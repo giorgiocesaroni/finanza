@@ -47,9 +47,9 @@ class App extends React.Component {
       .filter(
         (e) =>
           new Date(this.state.database[e].date).getMonth() ===
-            new Date().getMonth() &&
+          new Date().getMonth() &&
           new Date(this.state.database[e].date).getYear() ===
-            new Date().getYear()
+          new Date().getYear()
       )
       .reduce((acc, key) => {
         return { ...acc, [key]: this.state.database[key] };
@@ -108,16 +108,10 @@ class App extends React.Component {
             editingId={this.state.editingId}
           />
         </div>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="http://georgecesar.com/"
-        >
-          <p className="copyright">
-            Copyright &copy; {new Date().getFullYear()} George Cesar. All rights
-            reserved.
-          </p>
-        </a>
+        <p className="copyright">
+          Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
+          reserved.
+        </p>
       </div>
     );
   }
