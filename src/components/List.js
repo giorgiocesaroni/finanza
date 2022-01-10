@@ -1,5 +1,5 @@
 import React from "react";
-import { monthDay } from "./utilities";
+import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "accounting";
 
@@ -67,8 +67,10 @@ class List extends React.Component {
       ? this.props.database
       : this.sortDb(this.props.database);
 
+    const hasDb = Object.keys(this.props.database).length ? true : false;
+
     return (
-      <div className="element">
+      <div className={"element" + (hasDb ? "" : " hidden")}>
         <h2>{this.props.title}</h2>
         <Summary database={db} />
         <div onClick={this.setSort} className="description">

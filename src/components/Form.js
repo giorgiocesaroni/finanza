@@ -1,6 +1,6 @@
 import React from "react";
-import firebase from "./config/Firebase";
-import { supportedCategories } from "./App.js";
+import firebase from "../config/Firebase";
+import { supportedCategories } from "../App.js";
 
 class Form extends React.Component {
   constructor(props) {

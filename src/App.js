@@ -1,7 +1,8 @@
 import React from "react";
-import firebase from "./config/Firebase";
-import Form from "./Form";
-import List from "./List";
+import { firebaseApp, db } from "./config/Firebase";
+import { collection, doc, getDoc, getDocs, setDoc, onSnapshot } from "firebase/firestore";
+import Form from "./components/Form";
+import List from "./components/List";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -24,10 +25,22 @@ class App extends React.Component {
     this.deleteExpense = this.deleteExpense.bind(this);
   }
 
-  componentDidMount() {
-    this.db = firebase.database().ref("expenses");
-    this.db.on("value", (snap) => {
-      this.setState({ database: snap.val() });
+  async componentDidMount() {
+    // this.db = firebaseApp.database().ref("expenses");
+    // this.db.on("value", (snap) => {
+    //   this.setState({ database: snap.val() });
+    // });
+
+    // const usersRef = collection(db, "users");
+
+    // const ref = doc(db, "users", "giorgio");
+    // const docSnap = await getDoc(ref);
+    // console.log(docSnap.data());
+
+    // onSnapshot(doc(db, 'users', 'giorgio'), (doc) => { console.log(doc.data()); });
+
+    db.collection("users").doc("giorgio").collection("expenses").get().then(snap => {
+      snap.forEach(doc => console.log(doc.data()))
     });
   }
 
@@ -43,39 +56,39 @@ class App extends React.Component {
   }
 
   render() {
-    const thisMonthDb = Object.keys(this.state.database)
-      .filter(
-        (e) =>
-          new Date(this.state.database[e].date).getMonth() ===
-          new Date().getMonth() &&
-          new Date(this.state.database[e].date).getYear() ===
-          new Date().getYear()
-      )
-      .reduce((acc, key) => {
-        return { ...acc, [key]: this.state.database[key] };
-      }, {});
+    // const thisMonthDb = Object.keys(this.state.database)
+    //   .filter(
+    //     (e) =>
+    //       new Date(this.state.database[e].date).getMonth() ===
+    //       new Date().getMonth() &&
+    //       new Date(this.state.database[e].date).getYear() ===
+    //       new Date().getYear()
+    //   )
+    //   .reduce((acc, key) => {
+    //     return { ...acc, [key]: this.state.database[key] };
+    //   }, {});
 
-    const lastMonthDb = Object.keys(this.state.database)
-      .filter(
-        (e) =>
-          new Date(this.state.database[e].date).getMonth() ===
-          new Date().getMonth() - 1
-      )
-      .reduce((acc, key) => {
-        return { ...acc, [key]: this.state.database[key] };
-      }, {});
+    // const lastMonthDb = Object.keys(this.state.database)
+    //   .filter(
+    //     (e) =>
+    //       new Date(this.state.database[e].date).getMonth() ===
+    //       new Date().getMonth() - 1
+    //   )
+    //   .reduce((acc, key) => {
+    //     return { ...acc, [key]: this.state.database[key] };
+    //   }, {});
 
-    const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
-      return { ...acc, [key]: this.state.database[key] };
-    }, {});
+    // const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
+    //   return { ...acc, [key]: this.state.database[key] };
+    // }, {});
 
-    let editEntry = this.state.editingId
-      ? this.state.database[this.state.editingId]
-      : null;
+    // let editEntry = this.state.editingId
+    //   ? this.state.database[this.state.editingId]
+    //   : null;
 
     return (
       <div>
-        <div className="App">
+        {/* <div className="App">
           <Form
             database={this.state.database}
             toggleEditing={this.toggleEditing}
@@ -107,7 +120,7 @@ class App extends React.Component {
             isEditing={this.state.isEditing}
             editingId={this.state.editingId}
           />
-        </div>
+        </div> */}
         <p className="copyright">
           Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
           reserved.
