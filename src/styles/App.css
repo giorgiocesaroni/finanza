@@ -99,28 +99,6 @@ body {
   padding-bottom: 2rem;
 }
 
-.login-dialog {
-  z-index: 10;
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -10%);
-          transform: translate(-50%, -10%);
-  min-width: 320px;
-  max-width: 40ch;
-  background-color: white;
-  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 1.25rem;
-  padding: 2rem;
-}
-
-.login-dialog p {
-  color: #8d8d8c;
-  font-size: .95rem;
-  margin-bottom: 1rem;
-}
-
 .App {
   display: -ms-grid;
   display: grid;
@@ -400,6 +378,18 @@ body {
   color: #80807f;
   margin: 1rem 0 2rem 0;
   text-align: center;
+}
+
+.login {
+  background-color: #1067de;
+  color: #fafaf9;
+  padding: .5rem;
+  border-radius: 0.625rem;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin: 0 auto;
+  margin-top: 2rem;
 }
 
 footer {

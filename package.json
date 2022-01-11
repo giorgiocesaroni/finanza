@@ -8,9 +8,12 @@
     "@testing-library/user-event": "^7.2.1",
     "accounting": "^0.4.1",
     "firebase": "^9.4.1",
+    "firebaseui": "^6.0.0",
     "react": "^16.13.1",
+    "react-cookies": "^0.1.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "universal-cookie": "^4.0.4"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -93,7 +93,7 @@ class List extends React.Component {
                 <div className="entry" id={k} onClick={this.handleClick}>
                   <span className="icon">{db[k].category}</span>
                   <p>{monthDay(db[k].date)}</p>
-                  <p>{accounting.format(db[k].amount)}</p>
+                  <p>{accounting.formatMoney(db[k].price)}</p>
                   <p>{db[k].notes}</p>
                   <span
                     role="img"

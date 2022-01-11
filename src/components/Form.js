@@ -1,6 +1,7 @@
 import React from "react";
-import firebase from "../config/Firebase";
+import firebase, { db } from "../config/Firebase";
 import { supportedCategories } from "../App.js";
+import { doc, addDoc, collection, setDoc, updateDoc } from "firebase/firestore";
 
 class Form extends React.Component {
   constructor(props) {
@@ -8,7 +9,7 @@ class Form extends React.Component {
     this.state = {
       category: "",
       date: "",
-      amount: "",
+      price: "",
       notes: "",
     };
 
@@ -26,7 +27,7 @@ class Form extends React.Component {
       this.setState({
         category: "",
         date: "",
-        amount: "",
+        price: "",
         notes: "",
       });
     }
@@ -37,7 +38,6 @@ class Form extends React.Component {
   }
 
   handleChange(e) {
-    console.log("handleChange", e);
     const target = e.target;
     const value =
       target.type === "radio"
@@ -53,41 +53,44 @@ class Form extends React.Component {
 
   handleSubmit(e) {
     if (e.keyCode === 13) {
-      console.log("handleSubmit");
-      const state = { ...this.state };
+      // const this.state = { ...this.state };
 
-      if (!state.amount || Number(state.amount) === 0)
+      // If no price
+      if (!this.state.price || Number(this.state.price) === 0)
         return this.setState({
           category: "",
           date: "",
-          amount: "",
+          price: "",
           notes: "",
         });
 
-      if (!state.date) {
-        state.date = String(new Date());
+      // If no date
+      if (!this.state.date) {
+        this.state.date = String(new Date());
       } else {
-        state.date = String(new Date(state.date));
+        this.state.date = String(new Date(this.state.date));
       }
 
-      if (!state.category) {
-        state.category = "❓";
+      // If no category
+      if (!this.state.category) {
+        this.state.category = "❓";
       }
 
+      // Submit
       if (this.props.isEditing) {
-        firebase
-          .database()
-          .ref("expenses/" + this.props.editingId)
-          .set(state);
-        this.props.toggleEditing(false);
+        console.log(`Editing ${this.state.editingId}`);
+        const docRef = doc(db, `users/${this.props.uid}/expenses/${this.props.editingId}`);
+        updateDoc(docRef, this.state);
       } else {
-        firebase.database().ref("expenses").push(state);
+        addDoc(collection(db, `users/${this.props.uid}/expenses`), this.state);
       }
 
+      // Reset to initial state after submit
+      this.props.toggleEditing();
       return this.setState({
         category: "",
         date: "",
-        amount: "",
+        price: "",
         notes: "",
       });
     }
@@ -97,7 +100,7 @@ class Form extends React.Component {
     return (
       <form
         className={
-          this.state.amount < 0 ? "red" : this.state.amount > 0 ? "green" : ""
+          this.state.price < 0 ? "red" : this.state.price > 0 ? "green" : ""
         }
         id="entry-form"
         onKeyDown={this.handleSubmit}
@@ -125,13 +128,13 @@ class Form extends React.Component {
             ref={(ref) => {
               this.amountInput = ref;
             }}
-            value={this.state.amount}
+            value={this.state.price}
             onChange={this.handleChange}
             id="display-amount"
             type="number"
             placeholder="$"
             // autoFocus
-            name="amount"
+            name="price"
             className="amount"
           />
         </div>

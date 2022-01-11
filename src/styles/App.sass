@@ -10,6 +10,7 @@ $rolex-green: #006039
 $rolex-orange: #a37d2c
 $money-green: #2ecc71
 $money-red: #e74c3c
+$blue: rgb(16, 103, 222)
 
 $shadow10: 0px 0px 10px rgba(0, 0, 0, 0.1)
 $shadow3: 0px 0px 3px rgba(0, 0, 0, 0.1)
@@ -105,23 +106,23 @@ body
 	padding: .5rem
 	padding-bottom: 2rem
 
-.login-dialog
-	z-index: 10
-	position: absolute
-	top: 10%
-	left: 50%
-	transform: translate(-50%, -10%)
-	min-width: 320px
-	max-width: 40ch
-	background-color: white
-	box-shadow: $shadow10
-	border-radius: $radius
-	padding: 2rem
+// .login-dialog
+// 	z-index: 10
+// 	position: absolute
+// 	top: 10%
+// 	left: 50%
+// 	transform: translate(-50%, -10%)
+// 	min-width: 320px
+// 	max-width: 40ch
+// 	background-color: white
+// 	box-shadow: $shadow10
+// 	border-radius: $radius
+// 	padding: 2rem
 
-	p
-		color: $grey141
-		font-size: .95rem
-		margin-bottom: 1rem
+// 	p
+// 		color: $grey141
+// 		font-size: .95rem
+// 		margin-bottom: 1rem
 
 .App
 	display: grid
@@ -162,9 +163,6 @@ body
 		flex-flow: column
 		justify-content: space-between
 		transition: border .35s ease-in-out
-
-		input
-			// text-shadow: 0 0 10px rgba(255, 255, 255, .5)
 
 		#display-amount
 			text-align: right
@@ -264,7 +262,7 @@ body
 
 		.selected
 			color: white !important
-			background-color: rgb(16, 103, 222) !important
+			background-color: $blue !important
 
 		.entry
 			position: relative
@@ -305,6 +303,15 @@ body
 	color: $grey128
 	margin: 1rem 0 2rem 0
 	text-align: center
+
+.login
+	background-color: $blue
+	color: $white
+	padding: .5rem
+	border-radius: $radius/2
+	width: fit-content
+	margin: 0 auto
+	margin-top: 2rem
 
 footer
 	margin-top: 1rem
