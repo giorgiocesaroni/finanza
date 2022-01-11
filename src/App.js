@@ -32,16 +32,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // Cookies init
-    const uidCookie = new Cookies().get('uid');
-    if (uidCookie) {
-      this.setState({ auth: { user: { uid: uidCookie } } })
-      this.subscribeDatabase();
-    };
-
-    // console.log(cachedUid);
-    // if (this.state.cookies.get('uid')) this.setState({ auth: { user: {uid: } })
-
     // If user is not logged in, stop
     if (!this.state.auth) return;
 
@@ -73,7 +63,6 @@ class App extends React.Component {
     const googleAuthCredentials = await auth();
     this.setState({ auth: googleAuthCredentials });
     this.setState({ unsubscribeDatabase: this.subscribeDatabase() });
-    this.state.cookies.set("uid", `${this.state.auth.user.uid}`, { path: "/" });
   }
 
   logout() {
