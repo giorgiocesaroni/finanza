@@ -385,6 +385,7 @@ body {
   color: #fafaf9;
   padding: .5rem;
   border-radius: 0.625rem;
+  display: block;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;

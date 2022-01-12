@@ -3,8 +3,8 @@ import { db } from "./config/Firebase";
 import { query, collection, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import Form from "./components/Form";
 import List from "./components/List";
-import auth from "./auth/auth";
-import Cookies from "universal-cookie";
+import authWithGoogle from "./auth/auth-with-google";
+import AuthContext from "./auth/auth-context";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -60,7 +60,7 @@ class App extends React.Component {
   }
 
   async login() {
-    const googleAuthCredentials = await auth();
+    const googleAuthCredentials = await authWithGoogle();
     this.setState({ auth: googleAuthCredentials });
     this.setState({ unsubscribeDatabase: this.subscribeDatabase() });
   }
@@ -114,7 +114,7 @@ class App extends React.Component {
       : null;
 
     return (
-      <div>
+      <AuthContext.Provider value={this.state.auth}>
         <div className="App">
           <Form
             database={this.state.database}
@@ -151,17 +151,19 @@ class App extends React.Component {
         </div>
 
         {!this.state.auth ?
-          <p className="login" onClick={this.login}>Login with Google</p> :
-          <p className="login" onClick={this.logout}>Logout</p>
+          <button className="login" onClick={this.login}>Login with Google</button> :
+          <button className="login" onClick={this.logout}>Logout from {this.state.auth.user.displayName}</button>
         }
 
         <p className="copyright">
           Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
           reserved.
         </p>
-      </div>
+      </AuthContext.Provider>
     );
   }
 }
+
+App.contextType = AuthContext;
 
 export default App;

@@ -10,14 +10,17 @@ class List extends React.Component {
       inverted: false,
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
     this.sortDb = this.sortDb.bind(this);
     this.setSort = this.setSort.bind(this);
   }
 
+  handleDelete(k) {
+    return this.props.deleteExpense(k.target.id);
+  }
+
   handleClick(k) {
-    if (k.target.id) {
-      this.props.deleteExpense(k.target.id);
-    }
+    if (k.target.className.includes("delete")) return;
 
     const id = k.target.parentElement.id;
 
@@ -99,7 +102,7 @@ class List extends React.Component {
                     role="img"
                     aria-label="emoji"
                     id={k}
-                    onClick={this.handleClick}
+                    onClick={this.handleDelete}
                     className="icon delete"
                   >
                     ❌

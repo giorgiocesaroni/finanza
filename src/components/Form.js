@@ -1,7 +1,7 @@
 import React from "react";
-import firebase, { db } from "../config/Firebase";
+import { db } from "../config/Firebase";
 import { supportedCategories } from "../App.js";
-import { doc, addDoc, collection, setDoc, updateDoc } from "firebase/firestore";
+import { doc, addDoc, collection, updateDoc } from "firebase/firestore";
 
 class Form extends React.Component {
   constructor(props) {
@@ -13,13 +13,24 @@ class Form extends React.Component {
       notes: "",
     };
 
+    this.focus = this.focus.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.focus = this.focus.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   focus() {
     this.amountInput.focus();
+  }
+
+  reset() {
+    this.props.toggleEditing();
+    return this.setState({
+      category: "",
+      date: "",
+      price: "",
+      notes: "",
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -48,52 +59,34 @@ class Form extends React.Component {
     this.setState({
       [name]: value,
     });
-    console.log(this.state);
   }
 
   handleSubmit(e) {
-    if (e.keyCode === 13) {
-      // const this.state = { ...this.state };
+    if (e.keyCode !== 13) return;
 
-      // If no price
-      if (!this.state.price || Number(this.state.price) === 0)
-        return this.setState({
-          category: "",
-          date: "",
-          price: "",
-          notes: "",
-        });
+    // Reset if no price
+    if (!this.state.price) {
+      return this.reset();
+    };
 
-      // If no date
-      if (!this.state.date) {
-        this.state.date = String(new Date());
-      } else {
-        this.state.date = String(new Date(this.state.date));
-      }
-
-      // If no category
-      if (!this.state.category) {
-        this.state.category = "❓";
-      }
-
-      // Submit
-      if (this.props.isEditing) {
-        console.log(`Editing ${this.state.editingId}`);
-        const docRef = doc(db, `users/${this.props.uid}/expenses/${this.props.editingId}`);
-        updateDoc(docRef, this.state);
-      } else {
-        addDoc(collection(db, `users/${this.props.uid}/expenses`), this.state);
-      }
-
-      // Reset to initial state after submit
-      this.props.toggleEditing();
-      return this.setState({
-        category: "",
-        date: "",
-        price: "",
-        notes: "",
-      });
+    // Polished entry
+    const entry = {
+      category: this.state.category || "❓",
+      date: this.state.date ? String(new Date(this.state.date)) : String(new Date()),
+      notes: this.state.notes,
+      price: this.state.price || 0
     }
+
+    // Submit: create/update
+    if (this.props.isEditing) {
+      const docRef = doc(db, `users/${this.props.uid}/expenses/${this.props.editingId}`);
+      updateDoc(docRef, entry);
+    } else {
+      addDoc(collection(db, `users/${this.props.uid}/expenses`), entry);
+    }
+
+    // Reset to initial state after submit
+    this.reset();
   }
 
   render() {
