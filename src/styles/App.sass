@@ -1,5 +1,5 @@
-$light-grey: rgb(223, 223, 223)
-$light-grey-alt: rgb(212, 212, 211)
+$light-grey: rgb(240, 240, 240)
+$light-grey-alt: rgb(229, 229, 229)
 $medium-grey: rgb(197, 197, 197)
 $medium-dark-grey: rgb(46, 46, 45)
 $medium-dark-grey-alt: rgb(35, 35, 34)
@@ -26,7 +26,7 @@ $radius: 1.25rem
 $border25: 1px solid rgba(0, 0, 0, 0.25)
 $border10: 1px solid rgba(0, 0, 0, 0.1)
 
-$min-width: 12ch
+$font-min-width: 12ch
 
 *
 	margin: 0
@@ -87,22 +87,28 @@ p
 *::-webkit-scrollbar
 	display: none
 
+html
+	min-width: 320px
+	-webkit-text-size-adjust: 100%
+
 body
 	color: $grey29
-	font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif
+	font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neues", Helvetica, Arial, sans-serif
+	font-smooth: always
 	font-weight: 500
+
+#root
 	display: flex
 	flex-flow: column
-	justify-content: space-between
-	padding: .5rem
-	padding-bottom: 2rem
 
 .App
+	padding: .5rem
 	margin: 0 auto
 	max-width: 425px
 	display: grid
 	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
 	gap: .5rem
+	padding-top: .5rem
 
 .blurry
 	filter: blur(3px) grayscale(100)
@@ -160,7 +166,7 @@ body
 			position: relative
 			padding: .35rem
 			flex: 1
-			background-color: $light-grey
+			background-color: $light-grey-alt
 			font-size: 1.5rem
 			display: grid
 			justify-items: center
@@ -182,7 +188,7 @@ body
 	color: $grey128
 	background: $light-grey
 	border-radius: $radius/1.75
-	padding: .25rem .5rem .5rem .5rem
+	padding: .5rem
 
 	*
 		-webkit-touch-callout: none
@@ -274,10 +280,13 @@ body
 				align-items: center
 
 .copyright
+	font-size: .75rem
 	width: 100%
 	color: $grey128
-	margin: 1rem 0 2rem 0
 	text-align: center
+	padding: 1rem
+	padding-bottom: 2rem
+	margin-top: auto
 
 .login
 	background-color: $blue
@@ -287,7 +296,6 @@ body
 	display: block
 	width: fit-content
 	margin: 0 auto
-	margin-top: 2rem
 
 footer
 	margin-top: 1rem
@@ -298,7 +306,7 @@ footer
 	display: none
 
 .highlighted
-	background-color: $light-grey-alt !important
+	background-color: $light-grey !important
 
 .invisible
 	visibility: hidden

@@ -1,10 +1,11 @@
 import React from "react";
-import { db } from "./config/Firebase";
-import { query, collection, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import Intro from "./components/Intro";
 import Form from "./components/Form";
 import List from "./components/List";
 import { AuthContext, login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
+import { testDatabase } from "./utility/testDatabase";
+import { subscribeDatabase, unsubscribeDatabase } from "./repository/firebase-repository";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -12,23 +13,23 @@ export const supportedCategories = [
   { gas: "⛽️" },
   { utility: "⚙️" },
   { groceries: "🥑" },
+  { income: "💵" },
 ];
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      database: null,
+      database: testDatabase,
       isEditing: false,
       editingId: null,
       auth: null,
     };
 
     this.toggleEditing = this.toggleEditing.bind(this);
-    this.deleteExpense = this.deleteExpense.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
-    this.subscribeDatabase = this.subscribeDatabase.bind(this);
+    this.setState = this.setState.bind(this);
   }
 
   componentDidMount() {
@@ -37,44 +38,25 @@ class App extends React.Component {
     if (!this.state.auth && authFromLocalStorage) {
       this.setState({
         auth: getAuthFromLocalStorage(),
-        unsubscribeDatabase: this.subscribeDatabase(authFromLocalStorage.user.uid)
       });
+      subscribeDatabase(authFromLocalStorage.user.uid, this);
     };
   }
 
   async handleLogin() {
     const authObject = await login();
+    subscribeDatabase(authObject.user.uid, this)
     return this.setState({
-      auth: authObject,
-      unsubscribeDatabase: this.subscribeDatabase(authObject.user.uid)
+      auth: authObject
     });
   }
 
   handleLogout() {
     logout();
-    this.state.unsubscribeDatabase();
     this.setState({
       auth: null,
-      database: null,
-      unsubscribeDatabase: null,
+      database: testDatabase
     });
-  }
-
-  subscribeDatabase(uid) {
-    if (this.state.unsubscribeDatabase) return;
-
-    const expensesQuery = query(collection(db, `users/${uid}/expenses`));
-    return onSnapshot(expensesQuery, snap => {
-      const entries = {};
-      snap.forEach(doc => {
-        entries[doc.id] = doc.data();
-      })
-      this.setState({ database: entries });
-    });
-  }
-
-  unsubscribeDatabase() {
-    this.state.unsubscribeDatabase();
   }
 
   toggleEditing(state, id) {
@@ -83,10 +65,6 @@ class App extends React.Component {
     }
 
     return this.setState({ isEditing: false, editingId: null });
-  }
-
-  deleteExpense(id) {
-    deleteDoc(doc(db, `users/${this.state.auth.user.uid}/expenses/${id}`));
   }
 
   render() {
@@ -130,6 +108,7 @@ class App extends React.Component {
             editEntry={editEntry}
             editingId={this.state.editingId}
             uid={this.state.auth ? this.state.auth.user.uid : null}
+            setState={this.setState}
           />
           {/* <List
             title="This Month"
@@ -147,11 +126,17 @@ class App extends React.Component {
             isEditing={this.state.isEditing}
             editingId={this.state.editingId}
           /> */}
+
+          {!this.state.auth &&
+            <>
+              <Intro />
+            </>
+          }
+
           <List
-            title="To Date"
+            title="Personal"
             database={this.state.database}
             toggleEditing={this.toggleEditing}
-            deleteExpense={this.deleteExpense}
             isEditing={this.state.isEditing}
             editingId={this.state.editingId}
           />

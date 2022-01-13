@@ -2,6 +2,8 @@ import React from "react";
 import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
+import { AuthContext } from "../auth/auth-with-google";
+import { deleteExpense } from "../repository/firebase-repository";
 
 class List extends React.Component {
   constructor(props) {
@@ -15,9 +17,9 @@ class List extends React.Component {
     this.setSort = this.setSort.bind(this);
   }
 
-  handleDelete(k) {
+  handleDelete(id) {
     this.props.toggleEditing();
-    return this.props.deleteExpense(k.target.id);
+    return deleteExpense(this.context.user.uid, id);
   }
 
   handleClick(k) {
@@ -105,7 +107,7 @@ class List extends React.Component {
                     role="img"
                     aria-label="emoji"
                     id={k}
-                    onClick={this.handleDelete}
+                    onClick={() => this.handleDelete(k)}
                     className="icon delete"
                   >
                     ❌
@@ -119,5 +121,7 @@ class List extends React.Component {
     );
   }
 }
+
+List.contextType = AuthContext;
 
 export default List;

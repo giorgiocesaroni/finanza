@@ -8,11 +8,11 @@ export default function Summary(props) {
     .reduce((a, b) => a + b, 0);
 
   const income = Object.keys(props.database)
-    .filter((key) => props.database[key].price < 0)
+    .filter((key) => props.database[key].category == '💵')
     .map((key) => props.database[key].price)
     .reduce((a, b) => a + b, 0);
 
-  const balance = -income - expenses;
+  const balance = income - expenses;
 
   return (
     <ul className="summary">
