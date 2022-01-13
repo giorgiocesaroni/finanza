@@ -5,10 +5,6 @@
           box-sizing: border-box;
 }
 
-html {
-  background: white;
-}
-
 input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -93,6 +89,8 @@ body {
 }
 
 .App {
+  margin: 0 auto;
+  max-width: 425px;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (minmax(320px, 1fr))[auto-fit];

@@ -5,6 +5,9 @@ import { setAuthToLocalStorage, removeAuthFromLocalStorage } from "./auth-local-
 function googleAuth() {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+        prompt: "select_account"
+    })
 
     return new Promise((resolve, reject) => {
         signInWithPopup(auth, provider)

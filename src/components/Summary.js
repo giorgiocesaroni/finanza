@@ -1,5 +1,5 @@
 import React from "react";
-import accounting from "accounting";
+import accounting from "../utility/accounting";
 
 export default function Summary(props) {
   const expenses = Object.keys(props.database)

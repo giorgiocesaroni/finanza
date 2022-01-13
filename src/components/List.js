@@ -1,7 +1,7 @@
 import React from "react";
 import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
-import accounting from "accounting";
+import accounting from "../utility/accounting";
 
 class List extends React.Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class List extends React.Component {
   }
 
   handleDelete(k) {
+    this.props.toggleEditing();
     return this.props.deleteExpense(k.target.id);
   }
 
