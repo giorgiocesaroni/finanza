@@ -70,10 +70,12 @@ class List extends React.Component {
       ? this.props.database
       : this.sortDb(this.props.database);
 
-    const hasDb = Object.keys(this.props.database).length ? true : false;
+    const hasDb = this.props.database ? true : false;
+
+    if (!this.props.database) return null;
 
     return (
-      <div className={"element" + (hasDb ? "" : " hidden")}>
+      <div className="element">
         <h2>{this.props.title}</h2>
         <Summary database={db} />
         <div onClick={this.setSort} className="description">
@@ -83,7 +85,7 @@ class List extends React.Component {
           <p>Notes</p>
         </div>
         <div className="list">
-          {Object.keys(db).map((k) => {
+          {this.props.database && Object.keys(db).map((k) => {
             return (
               <div
                 className={

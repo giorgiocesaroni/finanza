@@ -3,8 +3,8 @@ import { db } from "./config/Firebase";
 import { query, collection, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 import Form from "./components/Form";
 import List from "./components/List";
-import authWithGoogle from "./auth/auth-with-google";
-import AuthContext from "./auth/auth-context";
+import { AuthContext, login, logout } from "./auth/auth-with-google";
+import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -18,7 +18,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      database: {},
+      database: null,
       isEditing: false,
       editingId: null,
       auth: null,
@@ -26,25 +26,44 @@ class App extends React.Component {
 
     this.toggleEditing = this.toggleEditing.bind(this);
     this.deleteExpense = this.deleteExpense.bind(this);
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.subscribeDatabase = this.subscribeDatabase.bind(this);
   }
 
   componentDidMount() {
-    // If user is not logged in, stop
-    if (!this.state.auth) return;
-
-    // If user is logged but not database, try subscribing
-    if (!this.state.database) return this.setState({ unsubscribeDatabase: this.subscribeDatabase() });
-
-    // Cookies init
+    // If user is not logged in and there's local storage auth
+    const authFromLocalStorage = getAuthFromLocalStorage();
+    if (!this.state.auth && authFromLocalStorage) {
+      this.setState({
+        auth: getAuthFromLocalStorage(),
+        unsubscribeDatabase: this.subscribeDatabase(authFromLocalStorage.user.uid)
+      });
+    };
   }
 
-  subscribeDatabase() {
+  async handleLogin() {
+    const authObject = await login();
+    return this.setState({
+      auth: authObject,
+      unsubscribeDatabase: this.subscribeDatabase(authObject.user.uid)
+    });
+  }
+
+  handleLogout() {
+    logout();
+    this.state.unsubscribeDatabase();
+    this.setState({
+      auth: null,
+      database: null,
+      unsubscribeDatabase: null,
+    });
+  }
+
+  subscribeDatabase(uid) {
     if (this.state.unsubscribeDatabase) return;
 
-    const expensesQuery = query(collection(db, `users/${this.state.auth.user.uid}/expenses`));
+    const expensesQuery = query(collection(db, `users/${uid}/expenses`));
     return onSnapshot(expensesQuery, snap => {
       const entries = {};
       snap.forEach(doc => {
@@ -56,18 +75,6 @@ class App extends React.Component {
 
   unsubscribeDatabase() {
     this.state.unsubscribeDatabase();
-    this.setState({ database: {}, unsubscribeDatabase: null });
-  }
-
-  async login() {
-    const googleAuthCredentials = await authWithGoogle();
-    this.setState({ auth: googleAuthCredentials });
-    this.setState({ unsubscribeDatabase: this.subscribeDatabase() });
-  }
-
-  logout() {
-    this.setState({ auth: null, database: {} });
-    this.unsubscribeDatabase();
   }
 
   toggleEditing(state, id) {
@@ -83,31 +90,31 @@ class App extends React.Component {
   }
 
   render() {
-    const thisMonthDb = Object.keys(this.state.database)
-      .filter(
-        (e) =>
-          new Date(this.state.database[e].date).getMonth() ===
-          new Date().getMonth() &&
-          new Date(this.state.database[e].date).getYear() ===
-          new Date().getYear()
-      )
-      .reduce((acc, key) => {
-        return { ...acc, [key]: this.state.database[key] };
-      }, {});
+    // const thisMonthDb = Object.keys(this.state.database)
+    //   .filter(
+    //     (e) =>
+    //       new Date(this.state.database[e].date).getMonth() ===
+    //       new Date().getMonth() &&
+    //       new Date(this.state.database[e].date).getYear() ===
+    //       new Date().getYear()
+    //   )
+    //   .reduce((acc, key) => {
+    //     return { ...acc, [key]: this.state.database[key] };
+    //   }, {});
 
-    const lastMonthDb = Object.keys(this.state.database)
-      .filter(
-        (e) =>
-          new Date(this.state.database[e].date).getMonth() ===
-          new Date().getMonth() - 1
-      )
-      .reduce((acc, key) => {
-        return { ...acc, [key]: this.state.database[key] };
-      }, {});
+    // const lastMonthDb = Object.keys(this.state.database)
+    //   .filter(
+    //     (e) =>
+    //       new Date(this.state.database[e].date).getMonth() ===
+    //       new Date().getMonth() - 1
+    //   )
+    //   .reduce((acc, key) => {
+    //     return { ...acc, [key]: this.state.database[key] };
+    //   }, {});
 
-    const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
-      return { ...acc, [key]: this.state.database[key] };
-    }, {});
+    // const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
+    //   return { ...acc, [key]: this.state.database[key] };
+    // }, {});
 
     let editEntry = this.state.editingId
       ? this.state.database[this.state.editingId]
@@ -124,7 +131,7 @@ class App extends React.Component {
             editingId={this.state.editingId}
             uid={this.state.auth ? this.state.auth.user.uid : null}
           />
-          <List
+          {/* <List
             title="This Month"
             database={thisMonthDb}
             toggleEditing={this.toggleEditing}
@@ -139,10 +146,10 @@ class App extends React.Component {
             deleteExpense={this.deleteExpense}
             isEditing={this.state.isEditing}
             editingId={this.state.editingId}
-          />
+          /> */}
           <List
             title="To Date"
-            database={toDateDb}
+            database={this.state.database}
             toggleEditing={this.toggleEditing}
             deleteExpense={this.deleteExpense}
             isEditing={this.state.isEditing}
@@ -151,8 +158,8 @@ class App extends React.Component {
         </div>
 
         {!this.state.auth ?
-          <button className="login" onClick={this.login}>Login with Google</button> :
-          <button className="login" onClick={this.logout}>Logout from {this.state.auth.user.displayName}</button>
+          <button className="login" onClick={this.handleLogin}>Login with Google</button> :
+          <button className="login" onClick={this.handleLogout}>Logout from {this.state.auth.user.displayName}</button>
         }
 
         <p className="copyright">
@@ -163,7 +170,5 @@ class App extends React.Component {
     );
   }
 }
-
-App.contextType = AuthContext;
 
 export default App;
