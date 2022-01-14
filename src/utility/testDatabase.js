@@ -25,7 +25,7 @@ export const testDatabase = {
   },
   5: {
     "notes": "Dad's donation",
-    "price": 200.00,
+    "price": 1000.00,
     "category": "💵",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"
   },

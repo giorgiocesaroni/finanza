@@ -6,6 +6,9 @@ import { AuthContext, login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { testDatabase } from "./utility/testDatabase";
 import { subscribeDatabase } from "./repository/firebase-repository";
+import { useEffect } from "react";
+import { useRef } from "react";
+import { gsap } from "gsap";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -26,6 +29,8 @@ class App extends React.Component {
       auth: null,
     };
 
+    this.listRef = React.createRef();
+
     this.toggleEditing = this.toggleEditing.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -41,6 +46,9 @@ class App extends React.Component {
       });
       subscribeDatabase(authFromLocalStorage.user.uid, this);
     };
+
+    // GSAP
+    gsap.from(this.listRef.current, { "opacity": "0" });
   }
 
   async handleLogin() {
@@ -68,35 +76,18 @@ class App extends React.Component {
   }
 
   render() {
-    // const thisMonthDb = Object.keys(this.state.database)
-    //   .filter(
-    //     (e) =>
-    //       new Date(this.state.database[e].date).getMonth() ===
-    //       new Date().getMonth() &&
-    //       new Date(this.state.database[e].date).getYear() ===
-    //       new Date().getYear()
-    //   )
-    //   .reduce((acc, key) => {
-    //     return { ...acc, [key]: this.state.database[key] };
-    //   }, {});
-
-    // const lastMonthDb = Object.keys(this.state.database)
-    //   .filter(
-    //     (e) =>
-    //       new Date(this.state.database[e].date).getMonth() ===
-    //       new Date().getMonth() - 1
-    //   )
-    //   .reduce((acc, key) => {
-    //     return { ...acc, [key]: this.state.database[key] };
-    //   }, {});
-
-    // const toDateDb = Object.keys(this.state.database).reduce((acc, key) => {
-    //   return { ...acc, [key]: this.state.database[key] };
-    // }, {});
-
     let editEntry = this.state.editingId
       ? this.state.database[this.state.editingId]
       : null;
+
+
+    // GSAP
+    // const listRef = useRef();
+
+    // useEffect(() => {
+    //   gsap.to(listRef.current, { rotation: "+=360" });
+    // });
+    // End GSAP
 
     return (
       <AuthContext.Provider value={this.state.auth}>
@@ -110,22 +101,6 @@ class App extends React.Component {
             uid={this.state.auth ? this.state.auth.user.uid : null}
             setState={this.setState}
           />
-          {/* <List
-            title="This Month"
-            database={thisMonthDb}
-            toggleEditing={this.toggleEditing}
-            deleteExpense={this.deleteExpense}
-            isEditing={this.state.isEditing}
-            editingId={this.state.editingId}
-          />
-          <List
-            title="Last Month"
-            database={lastMonthDb}
-            toggleEditing={this.toggleEditing}
-            deleteExpense={this.deleteExpense}
-            isEditing={this.state.isEditing}
-            editingId={this.state.editingId}
-          /> */}
 
           {!this.state.auth &&
             <>
@@ -134,6 +109,7 @@ class App extends React.Component {
           }
 
           <List
+            ref={this.listRef}
             title="Personal"
             database={this.state.database}
             toggleEditing={this.toggleEditing}
