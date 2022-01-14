@@ -19,6 +19,13 @@ class List extends React.Component {
 
   handleDelete(id) {
     this.props.toggleEditing();
+
+    // Intro mode
+    if (!this.context) {
+      delete this.props.database[id];
+      return this.setState({ database: this.props.database });
+    }
+
     return deleteExpense(this.context.user.uid, id);
   }
 

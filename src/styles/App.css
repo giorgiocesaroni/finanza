@@ -266,14 +266,17 @@ body {
           flex: 2;
 }
 
-.element ul {
+.element ul.summary {
   display: -ms-grid;
   display: grid;
   grid-auto-flow: column;
   gap: .5rem;
+  -ms-grid-columns: (1fr)[3];
+      grid-template-columns: repeat(3, 1fr);
 }
 
-.element ul li {
+.element ul.summary li {
+  width: 100%;
   padding: .25rem .5rem;
   border-radius: 0.41667rem;
   background-color: #e5e5e5;
@@ -286,7 +289,7 @@ body {
           flex-flow: column;
 }
 
-.element ul li p {
+.element ul.summary li p {
   -ms-flex-item-align: end;
       align-self: flex-end;
 }
@@ -368,6 +371,24 @@ body {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.element.tutorial {
+  gap: .75rem;
+  grid-auto-rows: 1fr;
+}
+
+.element.tutorial span {
+  display: -ms-grid;
+  display: grid;
+  grid-auto-rows: 1fr;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.element.tutorial span p {
+  margin-top: auto;
 }
 
 .copyright {

@@ -210,12 +210,14 @@ body
 		>:last-child
 			flex: 2
 
-	ul
+	ul.summary
 		display: grid
 		grid-auto-flow: column
 		gap: .5rem
+		grid-template-columns: repeat(3, 1fr)
 
 		li
+			width: 100%
 			padding: .25rem .5rem
 			border-radius: $radius/3
 			background-color: $light-grey-alt
@@ -278,6 +280,22 @@ body
 				padding: 0 .2rem
 				display: flex
 				align-items: center
+
+.element.tutorial
+	gap: .75rem
+	grid-auto-rows: 1fr
+
+	span
+		// border: 1px solid #000
+		display: grid
+		grid-auto-rows: 1fr
+		align-items: center
+
+		p
+			// border: 1px solid #000
+			// height: 100%
+			margin-top: auto
+			// text-align: center
 
 .copyright
 	font-size: .75rem

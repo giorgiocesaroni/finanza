@@ -5,7 +5,7 @@ import List from "./components/List";
 import { AuthContext, login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { testDatabase } from "./utility/testDatabase";
-import { subscribeDatabase, unsubscribeDatabase } from "./repository/firebase-repository";
+import { subscribeDatabase } from "./repository/firebase-repository";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -139,6 +139,7 @@ class App extends React.Component {
             toggleEditing={this.toggleEditing}
             isEditing={this.state.isEditing}
             editingId={this.state.editingId}
+            setState={this.setState}
           />
         </div>
 

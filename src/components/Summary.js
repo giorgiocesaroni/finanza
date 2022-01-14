@@ -3,7 +3,7 @@ import accounting from "../utility/accounting";
 
 export default function Summary(props) {
   const expenses = Object.keys(props.database)
-    .filter((key) => props.database[key].price > 0)
+    .filter((key) => props.database[key].price !== '💵')
     .map((key) => props.database[key].price)
     .reduce((a, b) => a + b, 0);
 
