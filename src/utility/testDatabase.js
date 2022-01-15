@@ -1,30 +1,30 @@
 export const testDatabase = {
-  1: {
+  "RZOHy4ydImg8tZ9zFcqw": {
     "notes": "Pizza with Joe",
     "price": 18.59,
     "category": "🍕",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"
   },
-  2: {
+  "RZOHyAydImg8tZ9zscqw": {
     "notes": "Jane's car",
     "price": 25.98,
     "category": "⛽️",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"
   },
-  3: {
+  "RNOHyAydImg8tZ9zFcqw": {
     "notes": "Screwdriver",
     "price": 8.21,
     "category": "⚙️",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"
   },
-  4: {
+  "RNOHyA5dImg8tZ9zFcqz": {
     "notes": "Fresh market",
     "price": 109.34,
     "category": "🥑",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"
   },
-  5: {
-    "notes": "Dad's donation",
+  "RNOHyAydImg8tZsfFcqw": {
+    "notes": "Income",
     "price": 1000.00,
     "category": "💵",
     "date": "Thu Jan 13 2022 13:06:14 GMT+0100 (CET)"

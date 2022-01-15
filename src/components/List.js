@@ -10,11 +10,29 @@ class List extends React.Component {
     super(props);
     this.state = {
       inverted: false,
+      filter: "date"
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.sortDb = this.sortDb.bind(this);
     this.setSort = this.setSort.bind(this);
+    this.scroll = this.scroll.bind(this);
+
+    this.listRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setState({ database: this.sortDb(this.props.database) });
+  }
+
+  componentDidUpdate(prevState) {
+    console.log(Object.keys(prevState.database));
+    console.log(Object.keys(this.state.database));
+    console.log((this.state.database));
+    // console.log(this.state.database);
+    // if (prevState.database === this.state.database) {
+    //   console.log("Same db");
+    // }
   }
 
   handleDelete(id) {
@@ -48,8 +66,8 @@ class List extends React.Component {
     let filter = this.state.filter;
     let filteredKeys = Object.keys(db).sort((a, b) => {
       if (filter === "date") {
-        if (new Date(db[a][filter]) < new Date(db[b][filter])) return -1;
-        if (new Date(db[a][filter]) > new Date(db[b][filter])) return 1;
+        if (new Date(db[a][filter]) < new Date(db[b][filter])) return 1;
+        if (new Date(db[a][filter]) > new Date(db[b][filter])) return -1;
       }
       if (db[a][filter] < db[b][filter]) return -1;
       if (db[a][filter] > db[b][filter]) return 1;
@@ -69,10 +87,17 @@ class List extends React.Component {
   }
 
   setSort(e) {
+    console.log("setSort");
+    // this.scroll();
     if (e.target.innerHTML.toLowerCase() === this.state.filter) {
       return this.setState((prev) => ({ inverted: !prev.inverted }));
     }
     this.setState({ filter: e.target.innerHTML.toLowerCase() });
+  }
+
+  scroll() {
+    console.log("Scroll");
+    this.listRef.current.scrollTo(0, 0);
   }
 
   render() {
@@ -91,10 +116,10 @@ class List extends React.Component {
         <div onClick={this.setSort} className="description">
           <p>Category</p>
           <p>Date</p>
-          <p>Amount</p>
+          <p>Price</p>
           <p>Notes</p>
         </div>
-        <div className="list">
+        <div className="list" ref={this.listRef}>
           {this.props.database && Object.keys(db).map((k) => {
             return (
               <div

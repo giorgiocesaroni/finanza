@@ -5,6 +5,10 @@
           box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -295,9 +299,6 @@ body {
 }
 
 .element .list {
-  display: -ms-grid;
-  display: grid;
-  grid-auto-rows: 1.75rem;
   max-height: calc(1.75rem * 10);
   overflow-y: scroll;
   -ms-scroll-snap-type: y mandatory;
@@ -305,6 +306,7 @@ body {
 }
 
 .element .list > div {
+  height: 1.75rem;
   scroll-snap-align: start;
 }
 
@@ -326,6 +328,7 @@ body {
   height: 100%;
   display: -ms-grid;
   display: grid;
+  gap: .5rem;
   -ms-grid-columns: (1fr)[3] 1.5fr;
       grid-template-columns: repeat(3, 1fr) 1.5fr;
   overflow-x: scroll;
@@ -436,5 +439,7 @@ footer {
   display: grid;
   -ms-grid-columns: (1fr)[3] 1.5fr;
       grid-template-columns: repeat(3, 1fr) 1.5fr;
+  gap: .5rem;
+  margin-top: .5rem;
 }
 /*# sourceMappingURL=App.css.map */

@@ -33,6 +33,9 @@ $font-min-width: 12ch
 	padding: 0
 	box-sizing: border-box
 
+html
+	scroll-behavior: smooth
+
 input
 	-webkit-appearance: none
 	appearance: none
@@ -228,13 +231,14 @@ body
 				align-self: flex-end
 
 	.list
-		display: grid
-		grid-auto-rows: 1.75rem
+		// display: grid
+		// grid-auto-rows: 1.75rem
 		max-height: calc(1.75rem * 10)
 		overflow-y: scroll
 		scroll-snap-type: y mandatory
 
 		>div
+			height: 1.75rem
 			scroll-snap-align: start
 
 		>*
@@ -251,6 +255,7 @@ body
 			position: relative
 			height: 100%
 			display: grid
+			gap: .5rem
 			grid-template-columns: repeat(3, 1fr) 1.5fr
 			overflow-x: scroll
 			scroll-snap-type: x mandatory
@@ -333,3 +338,5 @@ footer
 .description
 	display: grid
 	grid-template-columns: repeat(3, 1fr) 1.5fr
+	gap: .5rem
+	margin-top: .5rem

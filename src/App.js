@@ -6,8 +6,6 @@ import { AuthContext, login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { testDatabase } from "./utility/testDatabase";
 import { subscribeDatabase } from "./repository/firebase-repository";
-import { useEffect } from "react";
-import { useRef } from "react";
 import { gsap } from "gsap";
 
 // Currently supported categories
@@ -53,7 +51,7 @@ class App extends React.Component {
 
   async handleLogin() {
     const authObject = await login();
-    subscribeDatabase(authObject.user.uid, this)
+    subscribeDatabase(authObject.user.uid, this);
     return this.setState({
       auth: authObject
     });

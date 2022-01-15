@@ -19,7 +19,7 @@ export default class Intro extends React.Component {
           <span>
             <h3>Add</h3>
             <p>
-              Tap a category 🍕 and press "enter" to your entry.
+              Tap a category 🍕 and press "enter" to submit.
             </p>
           </span>
           <span>

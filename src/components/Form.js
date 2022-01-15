@@ -63,6 +63,7 @@ class Form extends React.Component {
   }
 
   handleSubmit(e) {
+
     if (e.keyCode !== 13) return;
 
     // Reset if no price
@@ -90,7 +91,11 @@ class Form extends React.Component {
     } else {
       console.log("Intro");
       // Test mode (intro)
-      this.props.database[this.props.editingId] = entry;
+      if (this.props.editingId) {
+        this.props.database[this.props.editingId] = entry;
+      } else {
+        this.props.database[`${Math.random() * 100}`] = entry;
+      }
       this.props.setState(this.props.database);
     }
 
@@ -108,20 +113,20 @@ class Form extends React.Component {
         <div className="display">
           <>
             <input
-              value={this.state.notes}
-              onChange={this.handleChange}
-              type="text"
-              placeholder="Notes"
-              name="notes"
-              className="notes"
-            />
-            <input
               value={this.state.date}
               onChange={this.handleChange}
               type="text"
               placeholder="Date"
               name="date"
               className="date"
+            />
+            <input
+              value={this.state.notes}
+              onChange={this.handleChange}
+              type="text"
+              placeholder="Notes"
+              name="notes"
+              className="notes"
             />
           </>
           <input
