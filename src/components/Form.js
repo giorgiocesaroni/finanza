@@ -1,8 +1,7 @@
 import React from "react";
-import { db } from "../config/firebase";
 import { supportedCategories } from "../App.js";
-import { doc, addDoc, collection, updateDoc } from "firebase/firestore";
 import { AuthContext } from "../auth/auth-with-google";
+import { addEntry, updateEntry } from "../repository/firebase-repository";
 
 class Form extends React.Component {
   constructor(props) {
@@ -63,34 +62,32 @@ class Form extends React.Component {
   }
 
   handleSubmit(e) {
-
     if (e.keyCode !== 13) return;
 
     // Reset if no price
     if (!this.state.price) {
       return this.reset();
-    };
+    }
 
     // Polished entry
     const entry = {
       category: this.state.category || "❓",
-      date: this.state.date ? String(new Date(this.state.date)) : String(new Date()),
+      date: this.state.date
+        ? String(new Date(this.state.date))
+        : String(new Date()),
       notes: this.state.notes,
-      price: this.state.price || 0
-    }
+      price: this.state.price || 0,
+    };
 
     // Submit: create/update on logged user
     if (this.context) {
-      console.log("With context");
       if (this.props.isEditing) {
-        const docRef = doc(db, `users/${this.props.uid}/expenses/${this.props.editingId}`);
-        updateDoc(docRef, entry);
+        updateEntry(this.props.uid, this.props.editingId, entry);
       } else {
-        addDoc(collection(db, `users/${this.props.uid}/expenses`), entry);
+        addEntry(this.props.uid, entry);
       }
-    } else {
-      console.log("Intro");
       // Test mode (intro)
+    } else {
       if (this.props.editingId) {
         this.props.database[this.props.editingId] = entry;
       } else {
@@ -105,11 +102,7 @@ class Form extends React.Component {
 
   render() {
     return (
-      <form
-        // className={this.state.price < 0 ? "red" : this.state.price > 0 ? "green" : ""}
-        id="entry-form"
-        onKeyDown={this.handleSubmit}
-      >
+      <form id="entry-form" onKeyDown={this.handleSubmit}>
         <div className="display">
           <>
             <input
@@ -138,14 +131,13 @@ class Form extends React.Component {
             id="display-amount"
             type="number"
             placeholder="$"
-            // autoFocus
             name="price"
             className="amount"
           />
         </div>
 
         <div className="categories-selector">
-          {supportedCategories.map(i => {
+          {supportedCategories.map((i) => {
             let category = Object.keys(i)[0];
             let emoji = i[category];
             return (
@@ -153,9 +145,7 @@ class Form extends React.Component {
                 onClick={this.focus}
                 htmlFor={category}
                 key={category}
-                className={
-                  this.state.category === emoji ? "highlighted" : null
-                }
+                className={this.state.category === emoji ? "highlighted" : null}
               >
                 <span role="img" aria-label={"Emoji of " + category}>
                   {emoji}
@@ -171,7 +161,6 @@ class Form extends React.Component {
             );
           })}
         </div>
-
       </form>
     );
   }

@@ -3,15 +3,16 @@ import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
 import { AuthContext } from "../auth/auth-with-google";
-import { deleteExpense } from "../repository/firebase-repository";
+import { deleteEntry } from "../repository/firebase-repository";
 
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       inverted: false,
-      filter: "date"
+      filter: "date",
     };
+
     this.handleClick = this.handleClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.sortDb = this.sortDb.bind(this);
@@ -25,16 +26,6 @@ class List extends React.Component {
     this.setState({ database: this.sortDb(this.props.database) });
   }
 
-  componentDidUpdate(prevState) {
-    console.log(Object.keys(prevState.database));
-    console.log(Object.keys(this.state.database));
-    console.log((this.state.database));
-    // console.log(this.state.database);
-    // if (prevState.database === this.state.database) {
-    //   console.log("Same db");
-    // }
-  }
-
   handleDelete(id) {
     this.props.toggleEditing();
 
@@ -44,7 +35,7 @@ class List extends React.Component {
       return this.setState({ database: this.props.database });
     }
 
-    return deleteExpense(this.context.user.uid, id);
+    return deleteEntry(this.context.user.uid, id);
   }
 
   handleClick(k) {
@@ -87,8 +78,6 @@ class List extends React.Component {
   }
 
   setSort(e) {
-    console.log("setSort");
-    // this.scroll();
     if (e.target.innerHTML.toLowerCase() === this.state.filter) {
       return this.setState((prev) => ({ inverted: !prev.inverted }));
     }
@@ -96,7 +85,6 @@ class List extends React.Component {
   }
 
   scroll() {
-    console.log("Scroll");
     this.listRef.current.scrollTo(0, 0);
   }
 
@@ -104,8 +92,6 @@ class List extends React.Component {
     const db = !this.state.filter
       ? this.props.database
       : this.sortDb(this.props.database);
-
-    const hasDb = this.props.database ? true : false;
 
     if (!this.props.database) return null;
 
@@ -120,34 +106,35 @@ class List extends React.Component {
           <p>Notes</p>
         </div>
         <div className="list" ref={this.listRef}>
-          {this.props.database && Object.keys(db).map((k) => {
-            return (
-              <div
-                className={
-                  this.props.isEditing && this.props.editingId === k
-                    ? "selected"
-                    : ""
-                }
-                key={k}
-              >
-                <div className="entry" id={k} onClick={this.handleClick}>
-                  <span className="icon">{db[k].category}</span>
-                  <p>{monthDay(db[k].date)}</p>
-                  <p>{accounting.formatMoney(db[k].price)}</p>
-                  <p>{db[k].notes}</p>
-                  <span
-                    role="img"
-                    aria-label="emoji"
-                    id={k}
-                    onClick={() => this.handleDelete(k)}
-                    className="icon delete"
-                  >
-                    ❌
-                  </span>
+          {this.props.database &&
+            Object.keys(db).map((k) => {
+              return (
+                <div
+                  className={
+                    this.props.isEditing && this.props.editingId === k
+                      ? "selected"
+                      : ""
+                  }
+                  key={k}
+                >
+                  <div className="entry" id={k} onClick={this.handleClick}>
+                    <span className="icon">{db[k].category}</span>
+                    <p>{monthDay(db[k].date)}</p>
+                    <p>{accounting.formatMoney(db[k].price)}</p>
+                    <p>{db[k].notes}</p>
+                    <span
+                      role="img"
+                      aria-label="emoji"
+                      id={k}
+                      onClick={() => this.handleDelete(k)}
+                      className="icon delete"
+                    >
+                      ❌
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     );

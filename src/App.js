@@ -78,15 +78,6 @@ class App extends React.Component {
       ? this.state.database[this.state.editingId]
       : null;
 
-
-    // GSAP
-    // const listRef = useRef();
-
-    // useEffect(() => {
-    //   gsap.to(listRef.current, { rotation: "+=360" });
-    // });
-    // End GSAP
-
     return (
       <AuthContext.Provider value={this.state.auth}>
         <div className="App">

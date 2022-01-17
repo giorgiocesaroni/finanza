@@ -1,19 +1,30 @@
 import { db } from "../config/firebase";
-import { query, collection, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { query, collection, addDoc, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
 
 export function subscribeDatabase(uid, app) {
   if (app.state.unsubscribeDatabase) return;
 
   const expensesQuery = query(collection(db, `users/${uid}/expenses`));
-  onSnapshot(expensesQuery, snap => {
+  const unsubscribeDatabase = onSnapshot(expensesQuery, snap => {
     const entries = {};
     snap.forEach(doc => {
       entries[doc.id] = doc.data();
     })
     app.setState({ database: entries });
   });
+  
+  return unsubscribeDatabase;
 }
 
-export function deleteExpense(uid, id) {
+export function updateEntry(uid, editingId, entry) {
+  const docRef = doc(db, `users/${uid}/expenses/${editingId}`);
+  updateDoc(docRef, entry);
+}
+
+export function addEntry(uid, entry) {
+  addDoc(collection(db, `users/${uid}/expenses`), entry);
+}
+
+export function deleteEntry(uid, id) {
   deleteDoc(doc(db, `users/${uid}/expenses/${id}`));
 }
