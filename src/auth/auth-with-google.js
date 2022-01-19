@@ -1,32 +1,33 @@
-import React from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { setAuthToLocalStorage, removeAuthFromLocalStorage } from "./auth-local-storage";
+import {
+  setAuthToLocalStorage,
+  removeAuthFromLocalStorage,
+} from "./auth-local-storage";
 
 function googleAuth() {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({
-        prompt: "select_account"
-    })
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    prompt: "select_account",
+  });
 
-    return new Promise((resolve, reject) => {
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                resolve(result);
-            }).catch((error) => {
-                reject(error);
-            });
-    })
+  return new Promise((resolve, reject) => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
 
 export async function login() {
-    const googleAuthObject = await googleAuth();
-    setAuthToLocalStorage(googleAuthObject);
-    return googleAuthObject;
+  const googleAuthObject = await googleAuth();
+  setAuthToLocalStorage(googleAuthObject);
+  return googleAuthObject;
 }
 
 export function logout() {
-    removeAuthFromLocalStorage();
+  removeAuthFromLocalStorage();
 }
-
-export const AuthContext = new React.createContext();

@@ -1,171 +1,156 @@
-import React from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { supportedCategories } from "../App.js";
-import { AuthContext } from "../auth/auth-with-google";
+import { AppStateContext, AuthContext } from "../context/Context";
 import { addEntry, updateEntry } from "../repository/firebase-repository";
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      category: "",
-      date: "",
-      price: "",
-      notes: "",
-    };
+export const Form = (props) => {
+  const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
+  const [price, setPrice] = useState("");
+  const [notes, setNotes] = useState("");
 
-    this.focus = this.focus.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.reset = this.reset.bind(this);
+  const authContext = useContext(AuthContext);
+  const appStateContext = useContext(AppStateContext);
+
+  const amountInput = useRef(null);
+
+  useEffect(() => {
+    if (!props.editEntry) return reset();
+    setCategory(props.editEntry.category);
+    setDate(props.editEntry.date);
+    setPrice(props.editEntry.price);
+    setNotes(props.editEntry.notes);
+  }, [props.editEntry]);
+
+  function focus() {
+    amountInput.current.focus();
   }
 
-  focus() {
-    this.amountInput.focus();
+  function reset() {
+    props.toggleEditing();
+    console.log(appStateContext);
+    // appStateContext.setAppState({});
+    setCategory("");
+    setDate("");
+    setPrice("");
+    setNotes("");
   }
 
-  reset() {
-    this.props.toggleEditing();
-    return this.setState({
-      category: "",
-      date: "",
-      price: "",
-      notes: "",
-    });
+  function handleDateChange(e) {
+    const value = e.target.value;
+    setDate(value);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.isEditing && !this.props.isEditing) {
-      this.setState({
-        category: "",
-        date: "",
-        price: "",
-        notes: "",
-      });
-    }
-
-    if (prevProps !== this.props) {
-      this.setState(this.props.editEntry);
-    }
+  function handleNotesChange(e) {
+    const value = e.target.value;
+    setNotes(value);
   }
 
-  handleChange(e) {
-    const target = e.target;
-    const value =
-      target.type === "radio"
-        ? target.id
-        : Number(target.value) || target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value,
-    });
+  function handlePriceChange(e) {
+    const value = e.target.value;
+    setPrice(value);
   }
 
-  handleSubmit(e) {
+  function handleCategoryChange(e) {
+    const value = e.target.id;
+    setCategory(value);
+  }
+
+  function handleSubmit(e) {
     if (e.keyCode !== 13) return;
 
     // Reset if no price
-    if (!this.state.price) {
-      return this.reset();
+    if (!price) {
+      return reset();
     }
 
     // Polished entry
     const entry = {
-      category: this.state.category || "❓",
-      date: this.state.date
-        ? String(new Date(this.state.date))
-        : String(new Date()),
-      notes: this.state.notes,
-      price: this.state.price || 0,
+      category: category || "❓",
+      date: date ? String(new Date(date)) : String(new Date()),
+      notes: notes,
+      price: Number(price) || 0,
     };
 
     // Submit: create/update on logged user
-    if (this.context) {
-      if (this.props.isEditing) {
-        updateEntry(this.props.uid, this.props.editingId, entry);
+    if (authContext) {
+      console.log(appStateContext.editingId);
+      if (appStateContext.isEditing) {
+        updateEntry(authContext.user.uid, appStateContext.editingId, entry);
       } else {
-        addEntry(this.props.uid, entry);
+        addEntry(authContext.user.uid, entry);
       }
       // Test mode (intro)
     } else {
-      if (this.props.editingId) {
-        this.props.database[this.props.editingId] = entry;
+      if (appStateContext.editingId) {
+        props.database[appStateContext.editingId] = entry;
       } else {
-        this.props.database[`${Math.random() * 100}`] = entry;
+        props.database[`${Math.random() * 100}`] = entry;
       }
-      this.props.setState(this.props.database);
+      props.setState(props.database);
     }
 
-    // Reset to initial state after submit
-    this.reset();
+    reset();
   }
 
-  render() {
-    return (
-      <form id="entry-form" onKeyDown={this.handleSubmit}>
-        <div className="display">
-          <>
-            <input
-              value={this.state.date}
-              onChange={this.handleChange}
-              type="text"
-              placeholder="Date"
-              name="date"
-              className="date"
-            />
-            <input
-              value={this.state.notes}
-              onChange={this.handleChange}
-              type="text"
-              placeholder="Notes"
-              name="notes"
-              className="notes"
-            />
-          </>
+  return (
+    <form id="entry-form" onKeyDown={handleSubmit}>
+      <div className="display">
+        <>
           <input
-            ref={(ref) => {
-              this.amountInput = ref;
-            }}
-            value={this.state.price}
-            onChange={this.handleChange}
-            id="display-amount"
-            type="number"
-            placeholder="$"
-            name="price"
-            className="amount"
+            value={date}
+            onChange={handleDateChange}
+            type="text"
+            placeholder="Date"
+            name="date"
+            className="date"
           />
-        </div>
+          <input
+            value={notes}
+            onChange={handleNotesChange}
+            type="text"
+            placeholder="Notes"
+            name="notes"
+            className="notes"
+          />
+        </>
+        <input
+          ref={amountInput}
+          value={price}
+          onChange={handlePriceChange}
+          id="display-amount"
+          type="number"
+          placeholder="$"
+          name="price"
+          className="amount"
+        />
+      </div>
 
-        <div className="categories-selector">
-          {supportedCategories.map((i) => {
-            let category = Object.keys(i)[0];
-            let emoji = i[category];
-            return (
-              <label
-                onClick={this.focus}
-                htmlFor={category}
-                key={category}
-                className={this.state.category === emoji ? "highlighted" : null}
-              >
-                <span role="img" aria-label={"Emoji of " + category}>
-                  {emoji}
-                </span>
-                <input
-                  checked={this.state.category === category}
-                  onChange={this.handleChange}
-                  type="radio"
-                  id={emoji}
-                  name="category"
-                />
-              </label>
-            );
-          })}
-        </div>
-      </form>
-    );
-  }
-}
-
-Form.contextType = AuthContext;
-
-export default Form;
+      <div className="categories-selector">
+        {supportedCategories.map((i) => {
+          let _category = Object.keys(i)[0];
+          let emoji = i[_category];
+          return (
+            <label
+              onClick={focus}
+              htmlFor={_category}
+              key={_category}
+              className={emoji === category ? "highlighted" : null}
+            >
+              <span role="img" aria-label={"Emoji of " + _category}>
+                {emoji}
+              </span>
+              <input
+                checked={emoji === category}
+                onChange={handleCategoryChange}
+                type="radio"
+                id={emoji}
+                name="category"
+              />
+            </label>
+          );
+        })}
+      </div>
+    </form>
+  );
+};

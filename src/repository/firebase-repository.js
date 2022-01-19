@@ -17,6 +17,7 @@ export function subscribeDatabase(uid, app) {
 }
 
 export function updateEntry(uid, editingId, entry) {
+  console.log(uid, editingId, entry);
   const docRef = doc(db, `users/${uid}/expenses/${editingId}`);
   updateDoc(docRef, entry);
 }

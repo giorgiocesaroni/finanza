@@ -1,8 +1,16 @@
 import React from "react";
 import Intro from "./components/Intro";
-import Form from "./components/Form";
+import { Form } from "./components/Form";
 import List from "./components/List";
-import { AuthContext, login, logout } from "./auth/auth-with-google";
+import { login, logout } from "./auth/auth-with-google";
+
+// Context
+import {
+  AuthContext,
+  RepositoryContext,
+  AppStateContext,
+} from "./context/Context";
+
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { testDatabase } from "./utility/testDatabase";
 import { subscribeDatabase } from "./repository/firebase-repository";
@@ -43,17 +51,17 @@ class App extends React.Component {
         auth: getAuthFromLocalStorage(),
       });
       subscribeDatabase(authFromLocalStorage.user.uid, this);
-    };
+    }
 
     // GSAP
-    gsap.from(this.listRef.current, { "opacity": "0" });
+    gsap.from(this.listRef.current, { opacity: "0" });
   }
 
   async handleLogin() {
     const authObject = await login();
     subscribeDatabase(authObject.user.uid, this);
     return this.setState({
-      auth: authObject
+      auth: authObject,
     });
   }
 
@@ -61,7 +69,7 @@ class App extends React.Component {
     logout();
     this.setState({
       auth: null,
-      database: testDatabase
+      database: testDatabase,
     });
   }
 
@@ -78,46 +86,52 @@ class App extends React.Component {
       ? this.state.database[this.state.editingId]
       : null;
 
+    const appStateContextValue = {
+      appState: this.state,
+      toggleEditing: this.toggleEditing,
+    };
+
     return (
-      <AuthContext.Provider value={this.state.auth}>
-        <div className="App">
-          <Form
-            database={this.state.database}
-            toggleEditing={this.toggleEditing}
-            isEditing={this.state.isEditing}
-            editEntry={editEntry}
-            editingId={this.state.editingId}
-            uid={this.state.auth ? this.state.auth.user.uid : null}
-            setState={this.setState}
-          />
+      <AppStateContext.Provider value={appStateContextValue}>
+        <AuthContext.Provider value={this.state.auth}>
+          <RepositoryContext.Provider value={this.state.database}>
+            <div className="App">
+              <Form toggleEditing={this.toggleEditing} editEntry={editEntry} />
 
-          {!this.state.auth &&
-            <>
-              <Intro />
-            </>
-          }
+              {!this.state.auth && (
+                <>
+                  <Intro />
+                </>
+              )}
 
-          <List
-            ref={this.listRef}
-            title="Personal"
-            database={this.state.database}
-            toggleEditing={this.toggleEditing}
-            isEditing={this.state.isEditing}
-            editingId={this.state.editingId}
-            setState={this.setState}
-          />
-        </div>
+              <List
+                ref={this.listRef}
+                title="Personal"
+                database={this.state.database}
+                toggleEditing={this.toggleEditing}
+                isEditing={this.state.isEditing}
+                editingId={this.state.editingId}
+                setState={this.setState}
+              />
+            </div>
 
-        {!this.state.auth ?
-          <button className="login" onClick={this.handleLogin}>Login with Google</button> :
-          <button className="login" onClick={this.handleLogout}>Logout from {this.state.auth.user.displayName}</button>
-        }
+            {!this.state.auth ? (
+              <button className="login" onClick={this.handleLogin}>
+                Login with Google
+              </button>
+            ) : (
+              <button className="login" onClick={this.handleLogout}>
+                Logout from {this.state.auth.user.displayName}
+              </button>
+            )}
 
-        <p className="copyright">
-          Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
-          reserved.
-        </p>
-      </AuthContext.Provider>
+            <p className="copyright">
+              Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
+              rights reserved.
+            </p>
+          </RepositoryContext.Provider>
+        </AuthContext.Provider>
+      </AppStateContext.Provider>
     );
   }
 }

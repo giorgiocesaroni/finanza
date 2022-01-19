@@ -2,7 +2,7 @@ import React from "react";
 import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
-import { AuthContext } from "../auth/auth-with-google";
+import { AuthContext } from "../context/Context";
 import { deleteEntry } from "../repository/firebase-repository";
 
 class List extends React.Component {
