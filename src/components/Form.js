@@ -28,8 +28,6 @@ export const Form = (props) => {
 
   function reset() {
     props.toggleEditing();
-    console.log(appStateContext);
-    // appStateContext.setAppState({});
     setCategory("");
     setDate("");
     setPrice("");
@@ -74,9 +72,8 @@ export const Form = (props) => {
 
     // Submit: create/update on logged user
     if (authContext) {
-      console.log(appStateContext.editingId);
-      if (appStateContext.isEditing) {
-        updateEntry(authContext.user.uid, appStateContext.editingId, entry);
+      if (appStateContext.appState.isEditing) {
+        updateEntry(authContext.user.uid, appStateContext.appState.editingId, entry);
       } else {
         addEntry(authContext.user.uid, entry);
       }
