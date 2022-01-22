@@ -1,8 +1,11 @@
 import React from "react";
+import { useState, useEffect } from "react";
+
 import Intro from "./components/Intro";
 import { Form } from "./components/Form";
 import List from "./components/List";
 import { login, logout } from "./auth/auth-with-google";
+import { useCollection } from "./repository/firebase-repository";
 
 // Context
 import {
@@ -12,9 +15,6 @@ import {
 } from "./context/Context";
 
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
-import { testDatabase } from "./utility/testDatabase";
-import { subscribeDatabase } from "./repository/firebase-repository";
-import { gsap } from "gsap";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -25,115 +25,84 @@ export const supportedCategories = [
   { income: "💵" },
 ];
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      database: testDatabase,
-      isEditing: false,
-      editingId: null,
-      auth: null,
-    };
+export const App = () => {
+  const [state, setState] = useState({
+    isEditing: false,
+    auth: null,
+  });
 
-    this.listRef = React.createRef();
-
-    this.toggleEditing = this.toggleEditing.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.setState = this.setState.bind(this);
-  }
-
-  componentDidMount() {
-    // If user is not logged in and there's local storage auth
+  useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();
-    if (!this.state.auth && authFromLocalStorage) {
-      this.setState({
+    if (!state.auth && authFromLocalStorage) {
+      setState({
+        ...state,
         auth: getAuthFromLocalStorage(),
       });
-      subscribeDatabase(authFromLocalStorage.user.uid, this);
     }
+  }, []);
 
-    // GSAP
-    gsap.from(this.listRef.current, { opacity: "0" });
-  }
+  const collection = useCollection(
+    state.auth && state.auth.user.uid,
+    "expenses"
+  );
 
-  async handleLogin() {
+  async function handleLogin() {
     const authObject = await login();
-    subscribeDatabase(authObject.user.uid, this);
-    return this.setState({
+    return setState({
+      ...state,
       auth: authObject,
     });
   }
 
-  handleLogout() {
+  function handleLogout() {
     logout();
-    this.setState({
+    setState({
+      ...state,
       auth: null,
-      database: testDatabase,
     });
   }
 
-  toggleEditing(state, id) {
-    if (state === true && id) {
-      return this.setState({ isEditing: state, editingId: id });
-    }
-
-    return this.setState({ isEditing: false, editingId: null });
+  function toggleEditing(isEditing, id) {
+    setState({
+      ...state,
+      isEditing: isEditing,
+      editingId: id,
+    });
   }
 
-  render() {
-    let editEntry = this.state.editingId
-      ? this.state.database[this.state.editingId]
-      : null;
+  return (
+    <div className="App">
+      <Form toggleEditing={toggleEditing} editEntry={state.editingId} />
 
-    const appStateContextValue = {
-      appState: this.state,
-      toggleEditing: this.toggleEditing,
-    };
+      {!state.auth && (
+        <>
+          <Intro />
+        </>
+      )}
 
-    return (
-      <AppStateContext.Provider value={appStateContextValue}>
-        <AuthContext.Provider value={this.state.auth}>
-          <RepositoryContext.Provider value={this.state.database}>
-            <div className="App">
-              <Form toggleEditing={this.toggleEditing} editEntry={editEntry} />
+      <List
+        title="Personal"
+        database={collection}
+        toggleEditing={toggleEditing}
+        isEditing={state.isEditing}
+        editingId={state.editingId}
+        setState={setState}
+      />
 
-              {!this.state.auth && (
-                <>
-                  <Intro />
-                </>
-              )}
+      {!state.auth ? (
+        <button className="login" onClick={handleLogin}>
+          Login with Google
+        </button>
+      ) : (
+        <button className="login" onClick={handleLogout}>
+          Logout from {state.auth.user.displayName}
+        </button>
+      )}
 
-              <List
-                ref={this.listRef}
-                title="Personal"
-                database={this.state.database}
-                toggleEditing={this.toggleEditing}
-                isEditing={this.state.isEditing}
-                editingId={this.state.editingId}
-                setState={this.setState}
-              />
-            </div>
-
-            {!this.state.auth ? (
-              <button className="login" onClick={this.handleLogin}>
-                Login with Google
-              </button>
-            ) : (
-              <button className="login" onClick={this.handleLogout}>
-                Logout from {this.state.auth.user.displayName}
-              </button>
-            )}
-
-            <p className="copyright">
-              Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
-              rights reserved.
-            </p>
-          </RepositoryContext.Provider>
-        </AuthContext.Provider>
-      </AppStateContext.Provider>
-    );
-  }
-}
-
-export default App;
+      <p className="copyright">
+        Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
+        reserved.
+      </p>
+    </div>
+  );
+};

@@ -1,31 +1,47 @@
-import { db } from "../config/firebase";
-import { query, collection, addDoc, updateDoc, doc, onSnapshot, deleteDoc } from "firebase/firestore";
+import { db } from "../config/Firebase";
+import { useState, useEffect } from "react";
+import {
+  query,
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  deleteDoc,
+} from "firebase/firestore";
+import { testDatabase } from "../utility/testDatabase";
 
-export function subscribeDatabase(uid, app) {
-  if (app.state.unsubscribeDatabase) return;
+export function useCollection(uid, path) {
+  const [myCollection, setCollection] = useState(testDatabase);
 
-  const expensesQuery = query(collection(db, `users/${uid}/expenses`));
-  const unsubscribeDatabase = onSnapshot(expensesQuery, snap => {
-    const entries = {};
-    snap.forEach(doc => {
-      entries[doc.id] = doc.data();
-    })
-    app.setState({ database: entries });
-  });
-  
-  return unsubscribeDatabase;
+  useEffect(() => {
+    if (uid) {
+      const collectionQuery = query(collection(db, `users/${uid}/${path}`));
+      const unsubscribeDatabase = onSnapshot(collectionQuery, (snap) => {
+        const items = {};
+        snap.forEach((doc) => {
+          items[doc.id] = doc.data();
+        });
+        setCollection(items);
+      });
+      return () => unsubscribeDatabase();
+    } else {
+      setCollection(testDatabase);
+    }
+  }, [uid]);
+
+  return myCollection;
 }
 
-export function updateEntry(uid, editingId, entry) {
-  console.log(uid, editingId, entry);
-  const docRef = doc(db, `users/${uid}/expenses/${editingId}`);
-  updateDoc(docRef, entry);
+export function updateItem(uid, path, itemId, item) {
+  const docRef = doc(db, `users/${uid}/${path}/${itemId}`);
+  updateDoc(docRef, item);
 }
 
-export function addEntry(uid, entry) {
-  addDoc(collection(db, `users/${uid}/expenses`), entry);
+export function addItem(uid, path, item) {
+  addDoc(collection(db, `users/${uid}/${path}`), item);
 }
 
-export function deleteEntry(uid, id) {
-  deleteDoc(doc(db, `users/${uid}/expenses/${id}`));
+export function deleteItem(uid, path, itemId) {
+  deleteDoc(doc(db, `users/${uid}/${path}/${itemId}`));
 }

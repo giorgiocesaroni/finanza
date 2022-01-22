@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { supportedCategories } from "../App.js";
 import { AppStateContext, AuthContext } from "../context/Context";
-import { addEntry, updateEntry } from "../repository/firebase-repository";
+import { addItem, updateItem } from "../repository/firebase-repository";
 
 export const Form = (props) => {
   const [category, setCategory] = useState("");
@@ -73,9 +73,13 @@ export const Form = (props) => {
     // Submit: create/update on logged user
     if (authContext) {
       if (appStateContext.appState.isEditing) {
-        updateEntry(authContext.user.uid, appStateContext.appState.editingId, entry);
+        updateItem(
+          authContext.user.uid,
+          appStateContext.appState.editingId,
+          entry
+        );
       } else {
-        addEntry(authContext.user.uid, entry);
+        addItem(authContext.user.uid, entry);
       }
       // Test mode (intro)
     } else {

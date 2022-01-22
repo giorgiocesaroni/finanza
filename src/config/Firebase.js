@@ -8,7 +8,7 @@ const config = {
   projectId: "finanza-react",
   storageBucket: "finanza-react.appspot.com",
   messagingSenderId: "88000701371",
-  appId: "1:88000701371:web:9b451832ac2b498fea1a9e"
+  appId: "1:88000701371:web:9b451832ac2b498fea1a9e",
 };
 
 const firebaseApp = initializeApp(config);

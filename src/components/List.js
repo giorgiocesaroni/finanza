@@ -3,7 +3,7 @@ import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
 import { AuthContext } from "../context/Context";
-import { deleteEntry } from "../repository/firebase-repository";
+import { deleteItem } from "../repository/firebase-repository";
 
 class List extends React.Component {
   constructor(props) {
@@ -35,7 +35,7 @@ class List extends React.Component {
       return this.setState({ database: this.props.database });
     }
 
-    return deleteEntry(this.context.user.uid, id);
+    return deleteItem(this.context.user.uid, id);
   }
 
   handleClick(k) {
