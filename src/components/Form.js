@@ -1,33 +1,31 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { supportedCategories } from "../App.js";
-import { AppStateContext, AuthContext } from "../context/Context";
+import Context from "../context";
 import { addItem, updateItem } from "../repository/firebase-repository";
 
-export const Form = (props) => {
-  const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [price, setPrice] = useState("");
-  const [notes, setNotes] = useState("");
-
-  const authContext = useContext(AuthContext);
-  const appStateContext = useContext(AppStateContext);
+const Form = () => {
+  const { state, setState, collection } = useContext(Context);
+  const [category, setCategory] = useState();
+  const [date, setDate] = useState();
+  const [price, setPrice] = useState();
+  const [notes, setNotes] = useState();
 
   const amountInput = useRef(null);
 
   useEffect(() => {
-    if (!props.editEntry) return reset();
-    setCategory(props.editEntry.category);
-    setDate(props.editEntry.date);
-    setPrice(props.editEntry.price);
-    setNotes(props.editEntry.notes);
-  }, [props.editEntry]);
+    if (!state.editingItem) return reset();
+    setCategory(state.editingItem.category);
+    setDate(state.editingItem.date);
+    setPrice(state.editingItem.price);
+    setNotes(state.editingItem.notes);
+  }, [state.editingItem]);
 
   function focus() {
     amountInput.current.focus();
   }
 
   function reset() {
-    props.toggleEditing();
+    setState({ ...state, editingId: null, editingItem: null });
     setCategory("");
     setDate("");
     setPrice("");
@@ -71,24 +69,20 @@ export const Form = (props) => {
     };
 
     // Submit: create/update on logged user
-    if (authContext) {
-      if (appStateContext.appState.isEditing) {
-        updateItem(
-          authContext.user.uid,
-          appStateContext.appState.editingId,
-          entry
-        );
+    if (state.auth) {
+      if (state.isEditing) {
+        updateItem(state.auth.user.uid, "expenses", state.editingId, entry);
       } else {
-        addItem(authContext.user.uid, entry);
+        addItem(state.auth.user.uid, "expenses", entry);
       }
       // Test mode (intro)
     } else {
-      if (appStateContext.editingId) {
-        props.database[appStateContext.editingId] = entry;
+      if (state.editingId) {
+        collection[state.editingId] = entry;
       } else {
-        props.database[`${Math.random() * 100}`] = entry;
+        collection[`${Math.random() * 100}`] = entry;
       }
-      props.setState(props.database);
+      setState(collection);
     }
 
     reset();
@@ -155,3 +149,5 @@ export const Form = (props) => {
     </form>
   );
 };
+
+export default Form;

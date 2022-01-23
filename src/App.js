@@ -1,20 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import Context from "./context";
 
 import Intro from "./components/Intro";
-import { Form } from "./components/Form";
+import Form from "./components/Form";
 import List from "./components/List";
+
 import { login, logout } from "./auth/auth-with-google";
 import { useCollection } from "./repository/firebase-repository";
-
-// Context
-import {
-  AuthContext,
-  RepositoryContext,
-  AppStateContext,
-} from "./context/Context";
-
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
+import { testDatabase } from "./utility/testDatabase";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -42,7 +37,7 @@ export const App = () => {
   }, []);
 
   const collection = useCollection(
-    state.auth && state.auth.user.uid,
+    state.auth ? state.auth.user.uid : null,
     "expenses"
   );
 
@@ -71,38 +66,29 @@ export const App = () => {
   }
 
   return (
-    <div className="App">
-      <Form toggleEditing={toggleEditing} editEntry={state.editingId} />
+    <Context.Provider value={{ state: state, setState: setState, collection }}>
+      <div className="App">
+        <Form />
 
-      {!state.auth && (
-        <>
-          <Intro />
-        </>
-      )}
+        {!state.auth && <Intro />}
 
-      <List
-        title="Personal"
-        database={collection}
-        toggleEditing={toggleEditing}
-        isEditing={state.isEditing}
-        editingId={state.editingId}
-        setState={setState}
-      />
+        <List title="Expenses" data={collection} />
 
-      {!state.auth ? (
-        <button className="login" onClick={handleLogin}>
-          Login with Google
-        </button>
-      ) : (
-        <button className="login" onClick={handleLogout}>
-          Logout from {state.auth.user.displayName}
-        </button>
-      )}
+        {!state.auth ? (
+          <button className="login" onClick={handleLogin}>
+            Login with Google
+          </button>
+        ) : (
+          <button className="login" onClick={handleLogout}>
+            Logout from {state.auth.user.displayName}
+          </button>
+        )}
 
-      <p className="copyright">
-        Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
-        reserved.
-      </p>
-    </div>
+        <p className="copyright">
+          Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
+          rights reserved.
+        </p>
+      </div>
+    </Context.Provider>
   );
 };
