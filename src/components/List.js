@@ -4,6 +4,7 @@ import Summary from "./Summary";
 import accounting from "../utility/accounting";
 import { AuthContext } from "../context/Context";
 import { deleteEntry } from "../repository/firebase-repository";
+import { useRef } from "react";
 
 class List extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class List extends React.Component {
     this.state = {
       inverted: false,
       filter: "date",
+      endOfList: true,
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -18,12 +20,37 @@ class List extends React.Component {
     this.sortDb = this.sortDb.bind(this);
     this.setSort = this.setSort.bind(this);
     this.scroll = this.scroll.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
 
     this.listRef = React.createRef();
   }
 
   componentDidMount() {
-    this.setState({ database: this.sortDb(this.props.database) });
+    this.setState({
+      database: this.sortDb(this.props.database),
+    });
+    this.listRef.current.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps != this.props) {
+      console.log(Object.keys(this.props.database).length);
+      this.setState({
+        endOfList: !(Object.keys(this.props.database).length > 10),
+      });
+    }
+  }
+
+  handleScroll(e) {
+    const scrollTop = e.target.scrollTop;
+    const listSize = e.target.children.length;
+    const listHeight = listSize * 28;
+    const maxListHeight = 10 * 28;
+    if (scrollTop + maxListHeight >= listHeight) {
+      this.setState({ endOfList: true });
+    } else {
+      this.setState({ endOfList: false });
+    }
   }
 
   handleDelete(id) {
@@ -105,36 +132,43 @@ class List extends React.Component {
           <p>Price</p>
           <p>Notes</p>
         </div>
-        <div className="list" ref={this.listRef}>
-          {this.props.database &&
-            Object.keys(db).map((k) => {
-              return (
-                <div
-                  className={
-                    this.props.isEditing && this.props.editingId === k
-                      ? "selected"
-                      : ""
-                  }
-                  key={k}
-                >
-                  <div className="entry" id={k} onClick={this.handleClick}>
-                    <span className="icon">{db[k].category}</span>
-                    <p>{monthDay(db[k].date)}</p>
-                    <p>{accounting.formatMoney(db[k].price)}</p>
-                    <p>{db[k].notes}</p>
-                    <span
-                      role="img"
-                      aria-label="emoji"
-                      id={k}
-                      onClick={() => this.handleDelete(k)}
-                      className="icon delete"
-                    >
-                      ❌
-                    </span>
+        <div className="list-wrapper">
+          <div
+            className={
+              "list-continues" + (!this.state.endOfList ? " visible" : "")
+            }
+          ></div>
+          <div className="list" ref={this.listRef}>
+            {this.props.database &&
+              Object.keys(db).map((k) => {
+                return (
+                  <div
+                    className={
+                      this.props.isEditing && this.props.editingId === k
+                        ? "selected"
+                        : ""
+                    }
+                    key={k}
+                  >
+                    <div className="entry" id={k} onClick={this.handleClick}>
+                      <span className="icon">{db[k].category}</span>
+                      <p>{monthDay(db[k].date)}</p>
+                      <p>{accounting.formatMoney(db[k].price)}</p>
+                      <p>{db[k].notes}</p>
+                      <span
+                        role="img"
+                        aria-label="emoji"
+                        id={k}
+                        onClick={() => this.handleDelete(k)}
+                        className="icon delete"
+                      >
+                        ❌
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
         </div>
       </div>
     );

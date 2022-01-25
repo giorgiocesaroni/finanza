@@ -228,6 +228,26 @@ body
 			p
 				align-self: flex-end
 
+	.list-wrapper
+		position: relative
+		// border: 2px solid #000
+		width: 100%
+		height: 100%
+
+	.list-continues
+		z-index: 1
+		top: calc(100% - 1.75rem)
+		left: 0
+		position: absolute
+		width: 100%
+		height: 1.75rem
+		// border: 2px solid blue
+		background: rgb(255,255,255)
+		background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(240,240,240, 1) 75%)
+		transition: opacity .15s ease
+		opacity: 0
+		pointer-events: none
+
 	.list
 		max-height: calc(1.75rem * 10)
 		overflow-y: scroll
@@ -326,6 +346,9 @@ footer
 	visibility: hidden
 	display: none
 
+.visible
+	opacity: 1 !important
+
 .description
 	font-weight: bold
 	display: grid
@@ -361,3 +384,6 @@ footer
 
 		.categories-selector label.highlighted
 			background-color: $grey58 !important
+
+		.list-continues
+			background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(48,48,48, 1) 75%) !important
