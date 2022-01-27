@@ -1,20 +1,12 @@
-import React from "react";
-import Intro from "./components/Intro";
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "./context/ContextWrapper";
+import { Intro } from "./components/Intro";
 import { Form } from "./components/Form";
-import List from "./components/List";
+import { List } from "./components/List";
 import { login, logout } from "./auth/auth-with-google";
-
-// Context
-import {
-  AuthContext,
-  RepositoryContext,
-  AppStateContext,
-} from "./context/Context";
-
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { testDatabase } from "./utility/testDatabase";
 import { subscribeDatabase } from "./repository/firebase-repository";
-import { gsap } from "gsap";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -25,115 +17,73 @@ export const supportedCategories = [
   { income: "💵" },
 ];
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      database: testDatabase,
-      isEditing: false,
-      editingId: null,
-      auth: null,
-    };
+export const App = () => {
+  const { context, updateContext } = useContext(Context);
 
-    this.listRef = React.createRef();
-
-    this.toggleEditing = this.toggleEditing.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.setState = this.setState.bind(this);
-  }
-
-  componentDidMount() {
-    // If user is not logged in and there's local storage auth
+  useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();
-    if (!this.state.auth && authFromLocalStorage) {
-      this.setState({
-        auth: getAuthFromLocalStorage(),
-      });
-      subscribeDatabase(authFromLocalStorage.user.uid, this);
+
+    if (context.auth) {
+      const unsubscribe = subscribeDatabase(
+        authFromLocalStorage.user.uid,
+        updateContext
+      );
+      return unsubscribe;
     }
 
-    // GSAP
-    gsap.from(this.listRef.current, { opacity: "0" });
-  }
+    if (!context.auth && authFromLocalStorage) {
+      updateContext({
+        auth: authFromLocalStorage,
+      });
+      const unsubscribe = subscribeDatabase(
+        authFromLocalStorage.user.uid,
+        updateContext
+      );
+      return unsubscribe;
+    }
+  }, [context.auth]);
 
-  async handleLogin() {
-    const authObject = await login();
-    subscribeDatabase(authObject.user.uid, this);
-    return this.setState({
-      auth: authObject,
+  async function handleLogin() {
+    const auth = await login();
+    return updateContext({
+      auth: auth,
     });
   }
 
-  handleLogout() {
+  function handleLogout() {
     logout();
-    this.setState({
+    updateContext({
       auth: null,
       database: testDatabase,
     });
   }
 
-  toggleEditing(state, id) {
-    if (state === true && id) {
-      return this.setState({ isEditing: state, editingId: id });
-    }
+  return (
+    <div className="App">
+      <Form />
 
-    return this.setState({ isEditing: false, editingId: null });
-  }
+      {!context.auth && (
+        <>
+          <Intro />
+        </>
+      )}
 
-  render() {
-    let editEntry = this.state.editingId
-      ? this.state.database[this.state.editingId]
-      : null;
+      <List title="Personal" data={context.database} />
 
-    const appStateContextValue = {
-      appState: this.state,
-      toggleEditing: this.toggleEditing,
-    };
+      {!context.auth ? (
+        <button className="login" onClick={handleLogin}>
+          Login with Google
+        </button>
+      ) : (
+        <button className="login" onClick={handleLogout}>
+          Logout from {context.auth.user.displayName}
+        </button>
+      )}
 
-    return (
-      <AppStateContext.Provider value={appStateContextValue}>
-        <AuthContext.Provider value={this.state.auth}>
-          <RepositoryContext.Provider value={this.state.database}>
-            <div className="App">
-              <Form toggleEditing={this.toggleEditing} editEntry={editEntry} />
-
-              {!this.state.auth && (
-                <>
-                  <Intro />
-                </>
-              )}
-
-              <List
-                ref={this.listRef}
-                title="Personal"
-                database={this.state.database}
-                toggleEditing={this.toggleEditing}
-                isEditing={this.state.isEditing}
-                editingId={this.state.editingId}
-                setState={this.setState}
-              />
-            </div>
-
-            {!this.state.auth ? (
-              <button className="login" onClick={this.handleLogin}>
-                Login with Google
-              </button>
-            ) : (
-              <button className="login" onClick={this.handleLogout}>
-                Logout from {this.state.auth.user.displayName}
-              </button>
-            )}
-
-            <p className="copyright">
-              Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
-              rights reserved.
-            </p>
-          </RepositoryContext.Provider>
-        </AuthContext.Provider>
-      </AppStateContext.Provider>
-    );
-  }
-}
-
-export default App;
+      <p className="copyright">
+        Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
+        reserved.
+      </p>
+    </div>
+  );
+};

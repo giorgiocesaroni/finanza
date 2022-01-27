@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { supportedCategories } from "../App.js";
-import { AppStateContext, AuthContext } from "../context/Context";
+import { Context } from "../context/ContextWrapper";
 import { addEntry, updateEntry } from "../repository/firebase-repository";
+import { useTestDatabase } from "../repository/useTestDatabase.js";
 
 export const Form = (props) => {
   const [category, setCategory] = useState("");
@@ -9,25 +10,25 @@ export const Form = (props) => {
   const [price, setPrice] = useState("");
   const [notes, setNotes] = useState("");
 
-  const authContext = useContext(AuthContext);
-  const appStateContext = useContext(AppStateContext);
-
+  const { context, updateContext, toggleEditing } = useContext(Context);
   const amountInput = useRef(null);
 
   useEffect(() => {
-    if (!props.editEntry) return reset();
-    setCategory(props.editEntry.category);
-    setDate(props.editEntry.date);
-    setPrice(props.editEntry.price);
-    setNotes(props.editEntry.notes);
-  }, [props.editEntry]);
+    if (!context.state.editingId) return reset();
+    setCategory(context.database[context.state.editingId].category);
+    setDate(context.database[context.state.editingId].date);
+    setPrice(context.database[context.state.editingId].price);
+    setNotes(context.database[context.state.editingId].notes);
+  }, [context.state.editingId]);
+
+  const [value, setValue] = useTestDatabase();
 
   function focus() {
     amountInput.current.focus();
   }
 
   function reset() {
-    props.toggleEditing();
+    toggleEditing();
     setCategory("");
     setDate("");
     setPrice("");
@@ -71,21 +72,21 @@ export const Form = (props) => {
     };
 
     // Submit: create/update on logged user
-    if (authContext) {
-      if (appStateContext.appState.isEditing) {
-        updateEntry(authContext.user.uid, appStateContext.appState.editingId, entry);
+    if (context.auth) {
+      if (context.state.isEditing) {
+        updateEntry(context.auth.user.uid, context.state.editingId, entry);
       } else {
-        addEntry(authContext.user.uid, entry);
+        addEntry(context.auth.user.uid, entry);
       }
       // Test mode (intro)
-    } else {
-      if (appStateContext.editingId) {
-        props.database[appStateContext.editingId] = entry;
-      } else {
-        props.database[`${Math.random() * 100}`] = entry;
-      }
-      props.setState(props.database);
     }
+    // else {
+    //   if (context.state.editingId) {
+    //     updateTestEntry(context.state.editingId, entry);
+    //   } else {
+    //     addTestEntry(entry);
+    //   }
+    // }
 
     reset();
   }

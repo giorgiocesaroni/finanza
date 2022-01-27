@@ -234,7 +234,7 @@ body
 		width: 100%
 		height: 100%
 
-	.list-continues
+	.list-continues-bottom
 		z-index: 1
 		top: calc(100% - 1.75rem)
 		left: 0
@@ -244,6 +244,19 @@ body
 		// border: 2px solid blue
 		background: rgb(255,255,255)
 		background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(240,240,240, 1) 75%)
+		transition: opacity .15s ease
+		opacity: 0
+		pointer-events: none
+
+	.list-continues-top
+		z-index: 1
+		top: 0
+		left: 0
+		position: absolute
+		width: 100%
+		height: 1.75rem
+		background: rgb(255,255,255)
+		background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(240,240,240, 1) 75%)
 		transition: opacity .15s ease
 		opacity: 0
 		pointer-events: none
@@ -385,5 +398,8 @@ footer
 		.categories-selector label.highlighted
 			background-color: $grey58 !important
 
-		.list-continues
+		.list-continues-bottom
 			background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(48,48,48, 1) 75%) !important
+
+		.list-continues-top
+			background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(48,48,48, 1) 75%) !important

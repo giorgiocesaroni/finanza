@@ -1,180 +1,145 @@
-import React from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
-import { AuthContext } from "../context/Context";
+import { Context } from "../context/ContextWrapper";
 import { deleteEntry } from "../repository/firebase-repository";
-import { useRef } from "react";
+import { useTestDatabase } from "../repository/useTestDatabase";
 
-class List extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inverted: false,
-      filter: "date",
-      endOfList: true,
-    };
+export const List = (props) => {
+  const [state, setState] = useState({
+    inverted: false,
+    filter: "date",
+    endOfListTop: true,
+    endOfListBottom: true,
+  });
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.sortDb = this.sortDb.bind(this);
-    this.setSort = this.setSort.bind(this);
-    this.scroll = this.scroll.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
+  const [data, setData] = useState(sortDb(props.data));
 
-    this.listRef = React.createRef();
-  }
+  const [value, setValue] = useTestDatabase();
 
-  componentDidMount() {
-    this.setState({
-      database: this.sortDb(this.props.database),
-    });
-    this.listRef.current.addEventListener("scroll", this.handleScroll);
-  }
+  const { context, updateContext, toggleEditing } = useContext(Context);
 
-  componentDidUpdate(prevProps) {
-    if (prevProps != this.props) {
-      console.log(Object.keys(this.props.database).length);
-      this.setState({
-        endOfList: !(Object.keys(this.props.database).length > 10),
-      });
-    }
-  }
+  const listRef = useRef(null);
 
-  handleScroll(e) {
-    const scrollTop = e.target.scrollTop;
-    const listSize = e.target.children.length;
-    const listHeight = listSize * 28;
-    const maxListHeight = 10 * 28;
-    if (scrollTop + maxListHeight >= listHeight) {
-      this.setState({ endOfList: true });
-    } else {
-      this.setState({ endOfList: false });
-    }
-  }
+  useEffect(() => {
+    setData(sortDb(props.data));
+  }, [props.data, state.filter, state.inverted]);
 
-  handleDelete(id) {
-    this.props.toggleEditing();
+  function handleDelete(id) {
+    toggleEditing();
 
     // Intro mode
-    if (!this.context) {
-      delete this.props.database[id];
-      return this.setState({ database: this.props.database });
+    if (!context.auth) {
+      const tempDatabase = {...props.data}
+      delete tempDatabase[id];
+      return updateContext({ database: tempDatabase });
     }
 
-    return deleteEntry(this.context.user.uid, id);
+    return deleteEntry(context.auth.user.uid, id);
   }
 
-  handleClick(k) {
+  function handleClick(k) {
     if (k.target.className.includes("delete")) return;
 
     const id = k.target.parentElement.id;
 
-    if (id === this.props.editingId) {
-      this.props.toggleEditing(false);
-      this.setState({ isEditing: false, editingId: null });
-      return;
+    if (id === context.state.editingId) {
+      return toggleEditing();
     }
 
-    this.props.toggleEditing(true, id);
-    this.setState({ isEditing: true, editingId: id });
+    return toggleEditing(id);
   }
 
-  sortDb(db) {
-    let filter = this.state.filter;
-    let filteredKeys = Object.keys(db).sort((a, b) => {
+  function sortDb(db) {
+    const database = { ...db };
+    let filter = state.filter;
+    let filteredKeys = Object.keys(database).sort((a, b) => {
       if (filter === "date") {
-        if (new Date(db[a][filter]) < new Date(db[b][filter])) return 1;
-        if (new Date(db[a][filter]) > new Date(db[b][filter])) return -1;
+        if (new Date(database[a][filter]) < new Date(database[b][filter]))
+          return 1;
+        if (new Date(database[a][filter]) > new Date(database[b][filter]))
+          return -1;
       }
-      if (db[a][filter] < db[b][filter]) return -1;
-      if (db[a][filter] > db[b][filter]) return 1;
+      if (database[a][filter] < database[b][filter]) return -1;
+      if (database[a][filter] > database[b][filter]) return 1;
       return 0;
     });
 
-    if (this.state.inverted) {
+    if (state.inverted) {
       filteredKeys = filteredKeys.reverse();
     }
 
-    let sortedDb = {};
+    let sortedDatabase = {};
     for (let key of filteredKeys) {
-      sortedDb[key] = db[key];
+      sortedDatabase[key] = database[key];
     }
 
-    return sortedDb;
+    return sortedDatabase;
   }
 
-  setSort(e) {
-    if (e.target.innerHTML.toLowerCase() === this.state.filter) {
-      return this.setState((prev) => ({ inverted: !prev.inverted }));
+  function setSort(e) {
+    if (e.target.innerHTML.toLowerCase() === state.filter) {
+      return setState((prev) => ({ ...prev, inverted: !prev.inverted }));
     }
-    this.setState({ filter: e.target.innerHTML.toLowerCase() });
+    setState({ ...state, filter: e.target.innerHTML.toLowerCase() });
   }
 
-  scroll() {
+  function scroll() {
     this.listRef.current.scrollTo(0, 0);
   }
 
-  render() {
-    const db = !this.state.filter
-      ? this.props.database
-      : this.sortDb(this.props.database);
-
-    if (!this.props.database) return null;
-
-    return (
-      <div className="element">
-        <h2>{this.props.title}</h2>
-        <Summary database={db} />
-        <div onClick={this.setSort} className="description">
-          <p>Category</p>
-          <p>Date</p>
-          <p>Price</p>
-          <p>Notes</p>
-        </div>
-        <div className="list-wrapper">
-          <div
-            className={
-              "list-continues" + (!this.state.endOfList ? " visible" : "")
-            }
-          ></div>
-          <div className="list" ref={this.listRef}>
-            {this.props.database &&
-              Object.keys(db).map((k) => {
-                return (
-                  <div
-                    className={
-                      this.props.isEditing && this.props.editingId === k
-                        ? "selected"
-                        : ""
-                    }
-                    key={k}
-                  >
-                    <div className="entry" id={k} onClick={this.handleClick}>
-                      <span className="icon">{db[k].category}</span>
-                      <p>{monthDay(db[k].date)}</p>
-                      <p>{accounting.formatMoney(db[k].price)}</p>
-                      <p>{db[k].notes}</p>
-                      <span
-                        role="img"
-                        aria-label="emoji"
-                        id={k}
-                        onClick={() => this.handleDelete(k)}
-                        className="icon delete"
-                      >
-                        ❌
-                      </span>
-                    </div>
+  return (
+    <div className="element">
+      <h2>{props.title}</h2>
+      <Summary data={data} />
+      <div onClick={setSort} className="description">
+        <p>Category</p>
+        <p>Date</p>
+        <p>Price</p>
+        <p>Notes</p>
+      </div>
+      <div className="list-wrapper">
+        {/* <div
+          className={
+            "list-continues-bottom" + (!state.endOfListBottom ? " visible" : "")
+          }
+        ></div>
+        <div
+          className={
+            "list-continues-top" + (!state.endOfListTop ? " visible" : "")
+          }
+        ></div> */}
+        <div className="list">
+          {data &&
+            Object.keys(data).map((k) => {
+              return (
+                <div
+                  className={
+                    context.state.isEditing && context.state.editingId === k ? "selected" : ""
+                  }
+                  key={k}
+                >
+                  <div className="entry" id={k} onClick={handleClick}>
+                    <span className="icon">{data[k].category}</span>
+                    <p>{monthDay(data[k].date)}</p>
+                    <p>{accounting.formatMoney(data[k].price)}</p>
+                    <p>{data[k].notes}</p>
+                    <span
+                      role="img"
+                      aria-label="emoji"
+                      id={k}
+                      onClick={() => handleDelete(k)}
+                      className="icon delete"
+                    >
+                      ❌
+                    </span>
                   </div>
-                );
-              })}
-          </div>
+                </div>
+              );
+            })}
         </div>
       </div>
-    );
-  }
-}
-
-List.contextType = AuthContext;
-
-export default List;
+    </div>
+  );
+};

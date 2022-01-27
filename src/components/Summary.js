@@ -2,14 +2,14 @@ import React from "react";
 import accounting from "../utility/accounting";
 
 export default function Summary(props) {
-  const expenses = Object.keys(props.database)
-    .filter((key) => props.database[key].category !== '💵')
-    .map((key) => props.database[key].price)
+  const expenses = Object.keys(props.data)
+    .filter((key) => props.data[key].category !== '💵')
+    .map((key) => props.data[key].price)
     .reduce((a, b) => a + b, 0);
 
-  const income = Object.keys(props.database)
-    .filter((key) => props.database[key].category === '💵')
-    .map((key) => props.database[key].price)
+  const income = Object.keys(props.data)
+    .filter((key) => props.data[key].category === '💵')
+    .map((key) => props.data[key].price)
     .reduce((a, b) => a + b, 0);
 
   const balance = income - expenses;
