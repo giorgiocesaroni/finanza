@@ -18,7 +18,7 @@ export const supportedCategories = [
 ];
 
 export const App = () => {
-  const { context, updateContext } = useContext(Context);
+  const { context, updateContext, testDatabase } = useContext(Context);
 
   useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();

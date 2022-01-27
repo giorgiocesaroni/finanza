@@ -1,9 +1,12 @@
 import React, { useState, createContext, useEffect } from "react";
-import { testDatabase } from "../utility/testDatabase";
+import { useTestDatabase } from "../repository/useTestDatabase";
 
 export const Context = createContext();
 
 export const ContextWrapper = (props) => {
+  const [testDatabase, testAddEntry, testUpdateEntry, testDeleteEntry] =
+    useTestDatabase();
+
   const [context, setContext] = useState({
     auth: null,
     database: testDatabase,
@@ -12,6 +15,16 @@ export const ContextWrapper = (props) => {
       editingId: null,
     },
   });
+
+  const testDatabaseDAO = {
+    addEntry: testAddEntry,
+    updateEntry: testUpdateEntry,
+    deleteEntry: testDeleteEntry,
+  };
+
+  useEffect(() => {
+    updateContext({ database: testDatabase });
+  }, [testDatabase]);
 
   function updateContext(update) {
     return setContext((prev) => ({ ...prev, ...update }));
@@ -25,7 +38,14 @@ export const ContextWrapper = (props) => {
   }
 
   return (
-    <Context.Provider value={{ context, updateContext, toggleEditing }}>
+    <Context.Provider
+      value={{
+        context,
+        updateContext,
+        toggleEditing,
+        testDatabaseDAO,
+      }}
+    >
       {props.children}
     </Context.Provider>
   );

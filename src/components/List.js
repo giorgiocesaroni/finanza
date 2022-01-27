@@ -16,9 +16,7 @@ export const List = (props) => {
 
   const [data, setData] = useState(sortDb(props.data));
 
-  const [value, setValue] = useTestDatabase();
-
-  const { context, updateContext, toggleEditing } = useContext(Context);
+  const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
 
   const listRef = useRef(null);
 
@@ -31,9 +29,7 @@ export const List = (props) => {
 
     // Intro mode
     if (!context.auth) {
-      const tempDatabase = {...props.data}
-      delete tempDatabase[id];
-      return updateContext({ database: tempDatabase });
+      return testDatabaseDAO.deleteEntry(id);
     }
 
     return deleteEntry(context.auth.user.uid, id);
@@ -116,7 +112,9 @@ export const List = (props) => {
               return (
                 <div
                   className={
-                    context.state.isEditing && context.state.editingId === k ? "selected" : ""
+                    context.state.isEditing && context.state.editingId === k
+                      ? "selected"
+                      : ""
                   }
                   key={k}
                 >

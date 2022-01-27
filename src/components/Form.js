@@ -10,7 +10,7 @@ export const Form = (props) => {
   const [price, setPrice] = useState("");
   const [notes, setNotes] = useState("");
 
-  const { context, updateContext, toggleEditing } = useContext(Context);
+  const { context, updateContext, toggleEditing, testDatabaseDAO } = useContext(Context);
   const amountInput = useRef(null);
 
   useEffect(() => {
@@ -80,13 +80,13 @@ export const Form = (props) => {
       }
       // Test mode (intro)
     }
-    // else {
-    //   if (context.state.editingId) {
-    //     updateTestEntry(context.state.editingId, entry);
-    //   } else {
-    //     addTestEntry(entry);
-    //   }
-    // }
+    else {
+      if (context.state.editingId) {
+        testDatabaseDAO.updateEntry(context.state.editingId, entry);
+      } else {
+        testDatabaseDAO.addEntry(entry);
+      }
+    }
 
     reset();
   }

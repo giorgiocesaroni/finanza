@@ -14,6 +14,8 @@ export const useTestDatabase = () => {
     function generateId() {
       return Math.random() * 100;
     }
+
+    setDatabase({ ...database, [generateId()]: entry });
   }
 
   function deleteEntry(id) {
@@ -24,4 +26,4 @@ export const useTestDatabase = () => {
   }
 
   return [database, addEntry, updateEntry, deleteEntry];
-}
+};
