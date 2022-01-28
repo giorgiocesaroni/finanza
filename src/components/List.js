@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
@@ -14,28 +14,22 @@ export const List = (props) => {
     endOfListTop: true,
     endOfListBottom: true,
   });
-
-  const [filter, setFilter] = useState(null);
+  const [filter, setFilter] = useState("");
   const [data, setData] = useState(sortData(props.data));
-
   const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
 
   useEffect(() => {
-    setData(sortData(filterData()));
+    setData(sortData(filterData(props.data)));
   }, [props.data, state.sortBy, state.inverted, filter]);
 
-  function filterData() {
-    console.log(props.data["065hDQqBKG73M7HDiTrM"]?.notes);
-    return props.data;
-    const filteredKeys = Object.keys(props.data).filter((i) =>
-      props.data[i].notes
-        .toLowerCase()
-        .includes(filter.toLowerCase().trim())
+  function filterData(data) {
+    const filteredKeys = Object.keys(data).filter((i) =>
+      data[i].notes.toLowerCase().includes(filter.toLowerCase().trim())
     );
 
     const filteredData = {};
     filteredKeys.forEach((i) => {
-      filteredData[i] = props.data[i];
+      filteredData[i] = data[i];
     });
 
     return filteredData;
@@ -64,8 +58,8 @@ export const List = (props) => {
     return toggleEditing(id);
   }
 
-  function sortData() {
-    const database = { ...props.data };
+  function sortData(data) {
+    const database = { ...data };
     let sortBy = state.sortBy;
     let sortByedKeys = Object.keys(database).sort((a, b) => {
       if (sortBy === "date") {
@@ -110,7 +104,7 @@ export const List = (props) => {
     <div className="element">
       <h2>{props.title}</h2>
       <Summary data={data} />
-      <ListSearch setFilter={setFilter}/>
+      <ListSearch setFilter={setFilter} />
       <ListHeader
         setSort={setSort}
         sortBy={state.sortBy}
