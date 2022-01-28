@@ -12,7 +12,7 @@ export default function ListHeader({ setSort, filter, inverted }) {
 
   return (
     <div onClick={setSort} className="description">
-      <p className={handleStyling("category")}>Category</p>
+      <p className={handleStyling("type")}>Type</p>
       <p className={handleStyling("date")}>Date</p>
       <p className={handleStyling("price")}>Price</p>
       <p className={handleStyling("notes")}>Notes</p>

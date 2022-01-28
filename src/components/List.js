@@ -5,6 +5,7 @@ import accounting from "../utility/accounting";
 import { Context } from "../context/ContextWrapper";
 import { deleteEntry } from "../repository/firebase-repository";
 import ListHeader from "./ListHeader";
+import ListSearch from "./ListSearch";
 
 export const List = (props) => {
   const [state, setState] = useState({
@@ -95,6 +96,7 @@ export const List = (props) => {
     <div className="element">
       <h2>{props.title}</h2>
       <Summary data={data} />
+      {/* <ListSearch data={data} setData={setData} /> */}
       <ListHeader
         setSort={setSort}
         filter={state.filter}
