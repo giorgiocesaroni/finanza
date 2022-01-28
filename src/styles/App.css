@@ -81,7 +81,7 @@ html {
 
 body {
   color: #767676;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neues", Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
   font-smooth: always;
   font-weight: 500;
 }

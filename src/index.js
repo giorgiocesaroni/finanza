@@ -4,6 +4,7 @@ import { App } from "./App";
 import { ContextWrapper } from "./context/ContextWrapper";
 import "./styles/App.css";
 import "./styles/index.css";
+import "./styles/Fonts.css";
 
 ReactDOM.render(
   <React.StrictMode>
