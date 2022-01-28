@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 
-export default function ListSearch({ data, setData }) {
-  const [value, setValue] = useState("");
+export default function ListSearch({ setFilter }) {
+  const [value, setValue] = useState(null);
 
   function handleChange(e) {
-    setValue(e.target.value);
+    const value = e.target.value;
+
+    setValue(value);
+    return setFilter(value);
   }
 
   return (
@@ -13,6 +16,7 @@ export default function ListSearch({ data, setData }) {
       value={value}
       className="search"
       placeholder="Search..."
+      type="text"
     />
   );
 }

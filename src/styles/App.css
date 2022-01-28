@@ -224,14 +224,6 @@ body {
   padding: .5rem;
 }
 
-.element * {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .element ol {
   display: -ms-grid;
   display: grid;

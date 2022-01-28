@@ -10,18 +10,36 @@ import ListSearch from "./ListSearch";
 export const List = (props) => {
   const [state, setState] = useState({
     inverted: false,
-    filter: "date",
+    sortBy: "date",
     endOfListTop: true,
     endOfListBottom: true,
   });
 
-  const [data, setData] = useState(sortDb(props.data));
+  const [filter, setFilter] = useState(null);
+  const [data, setData] = useState(sortData(props.data));
 
   const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
 
   useEffect(() => {
-    setData(sortDb(props.data));
-  }, [props.data, state.filter, state.inverted]);
+    setData(sortData(filterData()));
+  }, [props.data, state.sortBy, state.inverted, filter]);
+
+  function filterData() {
+    console.log(props.data["065hDQqBKG73M7HDiTrM"]?.notes);
+    return props.data;
+    const filteredKeys = Object.keys(props.data).filter((i) =>
+      props.data[i].notes
+        .toLowerCase()
+        .includes(filter.toLowerCase().trim())
+    );
+
+    const filteredData = {};
+    filteredKeys.forEach((i) => {
+      filteredData[i] = props.data[i];
+    });
+
+    return filteredData;
+  }
 
   function handleDelete(id) {
     toggleEditing();
@@ -46,31 +64,31 @@ export const List = (props) => {
     return toggleEditing(id);
   }
 
-  function sortDb() {
+  function sortData() {
     const database = { ...props.data };
-    let filter = state.filter;
-    let filteredKeys = Object.keys(database).sort((a, b) => {
-      if (filter === "date") {
-        if (new Date(database[a][filter]) < new Date(database[b][filter]))
+    let sortBy = state.sortBy;
+    let sortByedKeys = Object.keys(database).sort((a, b) => {
+      if (sortBy === "date") {
+        if (new Date(database[a][sortBy]) < new Date(database[b][sortBy]))
           return 1;
-        if (new Date(database[a][filter]) > new Date(database[b][filter]))
+        if (new Date(database[a][sortBy]) > new Date(database[b][sortBy]))
           return -1;
       }
-      if (filter === "price") {
-        if (database[a][filter] < database[b][filter]) return 1;
-        if (database[a][filter] > database[b][filter]) return -1;
+      if (sortBy === "price") {
+        if (database[a][sortBy] < database[b][sortBy]) return 1;
+        if (database[a][sortBy] > database[b][sortBy]) return -1;
       }
-      if (database[a][filter] < database[b][filter]) return -1;
-      if (database[a][filter] > database[b][filter]) return 1;
+      if (database[a][sortBy] < database[b][sortBy]) return -1;
+      if (database[a][sortBy] > database[b][sortBy]) return 1;
       return 0;
     });
 
     if (state.inverted) {
-      filteredKeys = filteredKeys.reverse();
+      sortByedKeys = sortByedKeys.reverse();
     }
 
     let sortedDatabase = {};
-    for (let key of filteredKeys) {
+    for (let key of sortByedKeys) {
       sortedDatabase[key] = database[key];
     }
 
@@ -78,28 +96,24 @@ export const List = (props) => {
   }
 
   function setSort(e) {
-    if (e.target.innerHTML.toLowerCase() === state.filter) {
+    if (e.target.innerHTML.toLowerCase() === state.sortBy) {
       return setState((prev) => ({ ...prev, inverted: !prev.inverted }));
     }
     setState({
       ...state,
       inverted: false,
-      filter: e.target.innerHTML.toLowerCase(),
+      sortBy: e.target.innerHTML.toLowerCase(),
     });
-  }
-
-  function scroll() {
-    this.listRef.current.scrollTo(0, 0);
   }
 
   return (
     <div className="element">
       <h2>{props.title}</h2>
       <Summary data={data} />
-      {/* <ListSearch data={data} setData={setData} /> */}
+      <ListSearch setFilter={setFilter}/>
       <ListHeader
         setSort={setSort}
-        filter={state.filter}
+        sortBy={state.sortBy}
         inverted={state.inverted}
       />
       <div className="list-wrapper">

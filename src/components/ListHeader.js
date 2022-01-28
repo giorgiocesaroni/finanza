@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function ListHeader({ setSort, filter, inverted }) {
+export default function ListHeader({ setSort, sortBy, inverted }) {
   function handleStyling(field) {
     let className = "";
-    if (field === filter) {
+    if (field === sortBy) {
       className += "bold";
       if (inverted) className += " inverted";
     }
