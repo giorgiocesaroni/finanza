@@ -91,8 +91,8 @@ body {
   min-height: 100vh;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: auto 1fr;
-      grid-template-rows: auto 1fr;
+  -ms-grid-rows: 1fr auto;
+      grid-template-rows: 1fr auto;
 }
 
 .App {
@@ -101,6 +101,8 @@ body {
   max-width: 425px;
   display: -ms-grid;
   display: grid;
+  -ms-grid-rows: auto 1fr;
+      grid-template-rows: auto 1fr;
   -ms-grid-columns: (minmax(320px, 1fr))[auto-fit];
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: .5rem;
@@ -211,6 +213,8 @@ body {
 }
 
 .element {
+  -ms-grid-row-align: start;
+      align-self: start;
   gap: .5rem;
   display: -ms-grid;
   display: grid;
@@ -460,7 +464,6 @@ body {
 
 footer {
   margin-top: 1rem;
-  color: #303030;
 }
 
 .hidden {

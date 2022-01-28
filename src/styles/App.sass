@@ -106,13 +106,14 @@ body
 #root
 	min-height: 100vh
 	display: grid
-	grid-template-rows: auto 1fr
+	grid-template-rows: 1fr auto
 
 .App
 	padding: .5rem
 	margin: 0 auto
 	max-width: 425px
 	display: grid
+	grid-template-rows: auto 1fr
 	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr))
 	gap: .5rem
 	padding-top: .5rem
@@ -184,6 +185,7 @@ body
 				transform: translate(-50%, -50%)
 
 .element
+	align-self: start
 	gap: .5rem
 	display: grid
 	grid-auto-flow: row
@@ -360,7 +362,6 @@ body
 
 footer
 	margin-top: 1rem
-	color: $grey48
 
 // Dynamic stuff
 .hidden
