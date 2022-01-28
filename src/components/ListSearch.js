@@ -11,12 +11,14 @@ export default function ListSearch({ setFilter }) {
   }
 
   return (
-    <input
-      onChange={handleChange}
-      value={value}
-      className="search"
-      placeholder="Search..."
-      type="text"
-    />
+    <>
+      <input
+        onChange={handleChange}
+        value={value}
+        className="list-search"
+        placeholder="Search..."
+        type="text"
+      />
+    </>
   );
 }

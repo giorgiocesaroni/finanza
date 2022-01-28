@@ -88,13 +88,12 @@ body {
 }
 
 #root {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: column;
-          flex-flow: column;
+  min-height: 100vh;
+  border: 1px solid #000;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: auto 1fr;
+      grid-template-rows: auto 1fr;
 }
 
 .App {
@@ -222,6 +221,38 @@ body {
   background: #f0f0f0;
   border-radius: 0.71429rem;
   padding: .5rem;
+}
+
+.element .title-search {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.element .title-search .list-search {
+  background-color: #e5e5e5;
+  border-radius: 0.3125rem;
+  padding: 0 .25rem;
+  max-width: 15ch;
+}
+
+.element .title-search .list-search::-webkit-input-placeholder {
+  opacity: .5;
+}
+
+.element .title-search .list-search:-ms-input-placeholder {
+  opacity: .5;
+}
+
+.element .title-search .list-search::-ms-input-placeholder {
+  opacity: .5;
+}
+
+.element .title-search .list-search::placeholder {
+  opacity: .5;
 }
 
 .element ol {
@@ -506,6 +537,12 @@ footer {
   html .list-continues-top {
     background: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0)), color-stop(75%, #303030)) !important;
     background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, #303030 75%) !important;
+  }
+  html .list-search {
+    background-color: #e5e5e5;
+    border-radius: 0.3125rem;
+    padding: 0 .25rem;
+    max-width: 15ch;
   }
 }
 /*# sourceMappingURL=App.css.map */

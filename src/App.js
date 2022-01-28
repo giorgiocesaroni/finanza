@@ -59,31 +59,35 @@ export const App = () => {
   }
 
   return (
-    <div className="App">
-      <Form />
+    <>
+      <div className="App">
+        <Form />
 
-      {!context.auth && (
-        <>
-          <Intro />
-        </>
-      )}
+        {!context.auth && (
+          <>
+            <Intro />
+          </>
+        )}
 
-      <List title="Personal" data={context.database} />
+        <List title="Personal" data={context.database} />
+      </div>
+      
+      <footer>
+        {!context.auth ? (
+          <button className="login" onClick={handleLogin}>
+            Login with Google
+          </button>
+        ) : (
+          <button className="login" onClick={handleLogout}>
+            Logout from {context.auth.user.displayName}
+          </button>
+        )}
 
-      {!context.auth ? (
-        <button className="login" onClick={handleLogin}>
-          Login with Google
-        </button>
-      ) : (
-        <button className="login" onClick={handleLogout}>
-          Logout from {context.auth.user.displayName}
-        </button>
-      )}
-
-      <p className="copyright">
-        Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All rights
-        reserved.
-      </p>
-    </div>
+        <p className="copyright">
+          Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
+          rights reserved.
+        </p>
+      </footer>
+    </>
   );
 };

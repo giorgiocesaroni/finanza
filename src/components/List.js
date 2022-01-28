@@ -102,9 +102,11 @@ export const List = (props) => {
 
   return (
     <div className="element">
-      <h2>{props.title}</h2>
+      <div className="title-search">
+        <h2 className="title">{props.title}</h2>
+        <ListSearch setFilter={setFilter} />
+      </div>
       <Summary data={data} />
-      <ListSearch setFilter={setFilter} />
       <ListHeader
         setSort={setSort}
         sortBy={state.sortBy}
