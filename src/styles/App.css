@@ -89,7 +89,6 @@ body {
 
 #root {
   min-height: 100vh;
-  border: 1px solid #000;
   display: -ms-grid;
   display: grid;
   -ms-grid-rows: auto 1fr;
