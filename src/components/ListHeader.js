@@ -11,11 +11,19 @@ export default function ListHeader({ setSort, filter, inverted }) {
   }
 
   return (
-    <div onClick={setSort} className="description">
-      <p className={handleStyling("type")}>Type</p>
-      <p className={handleStyling("date")}>Date</p>
-      <p className={handleStyling("price")}>Price</p>
-      <p className={handleStyling("notes")}>Notes</p>
+    <div className="description">
+      <p onClick={setSort} className={handleStyling("type")}>
+        Type
+      </p>
+      <p onClick={setSort} className={handleStyling("date")}>
+        Date
+      </p>
+      <p onClick={setSort} className={handleStyling("price")}>
+        Price
+      </p>
+      <p onClick={setSort} className={handleStyling("notes")}>
+        Notes
+      </p>
     </div>
   );
 }
