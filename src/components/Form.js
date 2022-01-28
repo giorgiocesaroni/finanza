@@ -55,6 +55,14 @@ export const Form = (props) => {
     setCategory(value);
   }
 
+  function handleCategoryClick(e) {
+    const value = e.target.id;
+    if (value === category) {
+      return setCategory('');
+    }
+    focus();
+  }
+
   function handleSubmit(e) {
     if (e.keyCode !== 13) return;
 
@@ -130,10 +138,10 @@ export const Form = (props) => {
           let emoji = i[_category];
           return (
             <label
-              onClick={focus}
+              onClick={handleCategoryClick}
               htmlFor={_category}
               key={_category}
-              className={emoji === category ? "highlighted" : null}
+              className={emoji === category ? null : "highlighted"}
             >
               <span role="img" aria-label={"Emoji of " + _category}>
                 {emoji}
