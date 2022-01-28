@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   margin: 0;
   padding: 0;
@@ -458,13 +459,22 @@ footer {
 }
 
 .description {
-  font-weight: bold;
   display: -ms-grid;
   display: grid;
   -ms-grid-columns: (1fr)[3] 1.5fr;
       grid-template-columns: repeat(3, 1fr) 1.5fr;
   gap: .5rem;
   margin-top: .5rem;
+}
+
+.description .bold {
+  font-weight: bold;
+}
+
+.description .bold.inverted::after {
+  content: " ▲";
+  opacity: .5;
+  font-size: .75rem;
 }
 
 @media (prefers-color-scheme: dark) {

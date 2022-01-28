@@ -4,7 +4,7 @@ import Summary from "./Summary";
 import accounting from "../utility/accounting";
 import { Context } from "../context/ContextWrapper";
 import { deleteEntry } from "../repository/firebase-repository";
-import { useTestDatabase } from "../repository/useTestDatabase";
+import ListHeader from "./ListHeader";
 
 export const List = (props) => {
   const [state, setState] = useState({
@@ -17,8 +17,6 @@ export const List = (props) => {
   const [data, setData] = useState(sortDb(props.data));
 
   const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
-
-  const listRef = useRef(null);
 
   useEffect(() => {
     setData(sortDb(props.data));
@@ -47,8 +45,8 @@ export const List = (props) => {
     return toggleEditing(id);
   }
 
-  function sortDb(db) {
-    const database = { ...db };
+  function sortDb() {
+    const database = { ...props.data };
     let filter = state.filter;
     let filteredKeys = Object.keys(database).sort((a, b) => {
       if (filter === "date") {
@@ -56,6 +54,10 @@ export const List = (props) => {
           return 1;
         if (new Date(database[a][filter]) > new Date(database[b][filter]))
           return -1;
+      }
+      if (filter === "price") {
+        if (database[a][filter] < database[b][filter]) return 1;
+        if (database[a][filter] > database[b][filter]) return -1;
       }
       if (database[a][filter] < database[b][filter]) return -1;
       if (database[a][filter] > database[b][filter]) return 1;
@@ -78,7 +80,11 @@ export const List = (props) => {
     if (e.target.innerHTML.toLowerCase() === state.filter) {
       return setState((prev) => ({ ...prev, inverted: !prev.inverted }));
     }
-    setState({ ...state, filter: e.target.innerHTML.toLowerCase() });
+    setState({
+      ...state,
+      inverted: false,
+      filter: e.target.innerHTML.toLowerCase(),
+    });
   }
 
   function scroll() {
@@ -89,12 +95,11 @@ export const List = (props) => {
     <div className="element">
       <h2>{props.title}</h2>
       <Summary data={data} />
-      <div onClick={setSort} className="description">
-        <p>Category</p>
-        <p>Date</p>
-        <p>Price</p>
-        <p>Notes</p>
-      </div>
+      <ListHeader
+        setSort={setSort}
+        filter={state.filter}
+        inverted={state.inverted}
+      />
       <div className="list-wrapper">
         {/* <div
           className={
@@ -106,6 +111,7 @@ export const List = (props) => {
             "list-continues-top" + (!state.endOfListTop ? " visible" : "")
           }
         ></div> */}
+
         <div className="list">
           {data &&
             Object.keys(data).map((k) => {
