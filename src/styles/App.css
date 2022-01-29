@@ -76,7 +76,6 @@ p {
 }
 
 html {
-  border: 2px solid blue;
   min-width: 320px;
   -webkit-text-size-adjust: 100%;
 }
