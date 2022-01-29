@@ -1,11 +1,14 @@
 import React, { useState, createContext, useEffect } from "react";
 import { useTestDatabase } from "../repository/useTestDatabase";
+import { useOnline } from "../utility/useOnline";
 
 export const Context = createContext();
 
 export const ContextWrapper = (props) => {
   const [testDatabase, testAddEntry, testUpdateEntry, testDeleteEntry] =
     useTestDatabase();
+
+  const isOnline = useOnline();
 
   const [context, setContext] = useState({
     auth: null,
@@ -44,6 +47,7 @@ export const ContextWrapper = (props) => {
         updateContext,
         toggleEditing,
         testDatabaseDAO,
+        isOnline
       }}
     >
       {props.children}

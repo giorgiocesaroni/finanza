@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { Context } from "./context/ContextWrapper";
 import { Intro } from "./components/Intro";
 import { Form } from "./components/Form";
 import { List } from "./components/List";
 import { login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
-import { testDatabase } from "./utility/testDatabase";
 import { subscribeDatabase } from "./repository/firebase-repository";
 
 // Currently supported categories
@@ -18,7 +17,8 @@ export const supportedCategories = [
 ];
 
 export const App = () => {
-  const { context, updateContext, testDatabase } = useContext(Context);
+  const { context, updateContext, testDatabase, isOnline } =
+    useContext(Context);
 
   useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();
@@ -59,7 +59,7 @@ export const App = () => {
   }
 
   return (
-    <div className="App">
+    <div className={"App" + (isOnline ? "" : " offline")}>
       <Form />
       <main>
         {!context.auth && <Intro />}

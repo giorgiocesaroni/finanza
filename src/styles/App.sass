@@ -31,6 +31,16 @@ $border10: 1px solid rgba(0, 0, 0, 0.1)
 
 $font-min-width: 12ch
 
+.offline
+	* :not(.is-offline)
+		filter: grayscale(1)
+
+.is-offline
+	margin-bottom: .5rem
+	color: white
+	background-color: red !important
+	font-size: .85rem
+
 *
 	margin: 0
 	padding: 0
@@ -134,13 +144,16 @@ main
 	position: sticky
 	top: .5rem
 	overflow: hidden
-	border-radius: $radius/1.75
+	border-bottom-left-radius: $radius/1.75
+	border-bottom-right-radius: $radius/1.75
 	display: flex
 	flex-flow: column
 	justify-content: space-between
 	box-shadow: $shadow-light-mode
 
 	.display
+		border-top-left-radius: $radius/1.75
+		border-top-right-radius: $radius/1.75
 		border-bottom: 4px solid transparent
 		position: relative
 		flex: 1

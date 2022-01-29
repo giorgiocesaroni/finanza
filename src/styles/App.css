@@ -1,4 +1,16 @@
 @charset "UTF-8";
+.offline * :not(.is-offline) {
+  -webkit-filter: grayscale(1);
+          filter: grayscale(1);
+}
+
+.is-offline {
+  margin-bottom: .5rem;
+  color: white;
+  background-color: red !important;
+  font-size: .85rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -127,7 +139,8 @@ main {
   position: sticky;
   top: .5rem;
   overflow: hidden;
-  border-radius: 0.71429rem;
+  border-bottom-left-radius: 0.71429rem;
+  border-bottom-right-radius: 0.71429rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -143,6 +156,8 @@ main {
 }
 
 #entry-form .display {
+  border-top-left-radius: 0.71429rem;
+  border-top-right-radius: 0.71429rem;
   border-bottom: 4px solid transparent;
   position: relative;
   -webkit-box-flex: 1;
