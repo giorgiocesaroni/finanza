@@ -76,6 +76,7 @@ p {
 }
 
 html {
+  border: 2px solid blue;
   min-width: 320px;
   -webkit-text-size-adjust: 100%;
 }
@@ -87,26 +88,24 @@ body {
   font-weight: 500;
 }
 
-#root {
-  min-height: 100vh;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: 1fr auto;
-      grid-template-rows: 1fr auto;
-}
-
 .App {
   padding: .5rem;
   margin: 0 auto;
   max-width: 425px;
   display: -ms-grid;
   display: grid;
-  -ms-grid-rows: auto 1fr;
-      grid-template-rows: auto 1fr;
-  -ms-grid-columns: (minmax(320px, 1fr))[auto-fit];
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: .5rem;
+  -ms-grid-rows: auto 1fr auto;
+      grid-template-rows: auto 1fr auto;
   padding-top: .5rem;
+}
+
+main {
+  -ms-grid-row-align: start;
+      align-self: start;
+  display: -ms-grid;
+  display: grid;
+  gap: .5rem;
 }
 
 .blurry {

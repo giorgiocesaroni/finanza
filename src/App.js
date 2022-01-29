@@ -59,19 +59,15 @@ export const App = () => {
   }
 
   return (
-    <>
-      <div className="App">
-        <Form />
-
-        {!context.auth && (
-          <>
-            <Intro />
-          </>
-        )}
-
+    <div className="App">
+      <Form />
+      <main>
+        {!context.auth && <Intro />}
+        {/* <Intro />
+        <Intro />
+        <Intro /> */}
         <List title="Personal" data={context.database} />
-      </div>
-      
+      </main>
       <footer>
         {!context.auth ? (
           <button className="login" onClick={handleLogin}>
@@ -82,12 +78,11 @@ export const App = () => {
             Logout from {context.auth.user.displayName}
           </button>
         )}
-
         <p className="copyright">
           Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
           rights reserved.
         </p>
       </footer>
-    </>
+    </div>
   );
 };
