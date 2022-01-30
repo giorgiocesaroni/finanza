@@ -3,6 +3,8 @@ import {
   setAuthToLocalStorage,
   removeAuthFromLocalStorage,
 } from "./auth-local-storage";
+import { testDatabase } from "../utility/testDatabase";
+import { ContextWrapper } from "../context/ContextWrapper";
 
 function googleAuth() {
   const auth = getAuth();
@@ -25,9 +27,10 @@ function googleAuth() {
 export async function login() {
   const googleAuthObject = await googleAuth();
   setAuthToLocalStorage(googleAuthObject);
-  return googleAuthObject;
+  return { auth: googleAuthObject };
 }
 
 export function logout() {
   removeAuthFromLocalStorage();
+  return { auth: null, database: testDatabase };
 }

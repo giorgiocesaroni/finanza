@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import { useTestDatabase } from "../repository/useTestDatabase";
 import { useOnline } from "../utility/useOnline";
+import { login, logout } from "../auth/auth-with-google";
 
 export const Context = createContext();
 
@@ -52,6 +53,8 @@ export const ContextWrapper = (props) => {
         isOnline,
         isOpen,
         setOpen,
+        login,
+        logout,
       }}
     >
       {props.children}

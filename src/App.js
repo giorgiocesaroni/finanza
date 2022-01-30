@@ -18,15 +18,22 @@ export const supportedCategories = [
 ];
 
 export const App = () => {
-  const { context, updateContext, testDatabase, isOnline, isOpen, setOpen } =
-    useContext(Context);
+  const {
+    context,
+    updateContext,
+    isOnline,
+    isOpen,
+    setOpen,
+    handleLogin,
+    handleLogout,
+  } = useContext(Context);
 
   useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();
 
-    if (context.auth) {
+    if (context.auth?.user) {
       const unsubscribe = subscribeDatabase(
-        authFromLocalStorage.user.uid,
+        context.auth.user.uid,
         updateContext
       );
       return unsubscribe;
@@ -44,21 +51,6 @@ export const App = () => {
     }
   }, [context.auth]);
 
-  async function handleLogin() {
-    const auth = await login();
-    return updateContext({
-      auth: auth,
-    });
-  }
-
-  function handleLogout() {
-    logout();
-    updateContext({
-      auth: null,
-      database: testDatabase,
-    });
-  }
-
   return (
     <>
       <Menu />
@@ -75,21 +67,6 @@ export const App = () => {
           {!context.auth && <Intro />}
           <List title="Personal" data={context.database} />
         </main>
-        <footer>
-          {!context.auth ? (
-            <button className="login" onClick={handleLogin}>
-              Login with Google
-            </button>
-          ) : (
-            <button className="login" onClick={handleLogout}>
-              Logout from {context.auth.user.displayName}
-            </button>
-          )}
-          <p className="copyright">
-            Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
-            rights reserved.
-          </p>
-        </footer>
       </div>
     </>
   );
