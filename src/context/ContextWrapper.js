@@ -10,6 +10,8 @@ export const ContextWrapper = (props) => {
 
   const isOnline = useOnline();
 
+  const [isOpen, setOpen] = useState(false);
+
   const [context, setContext] = useState({
     auth: null,
     database: testDatabase,
@@ -47,7 +49,9 @@ export const ContextWrapper = (props) => {
         updateContext,
         toggleEditing,
         testDatabaseDAO,
-        isOnline
+        isOnline,
+        isOpen,
+        setOpen,
       }}
     >
       {props.children}

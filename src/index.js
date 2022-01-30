@@ -5,6 +5,7 @@ import { ContextWrapper } from "./context/ContextWrapper";
 import "./styles/App.css";
 import "./styles/index.css";
 import "./styles/Fonts.css";
+import "./styles/Menu.css";
 
 ReactDOM.render(
   <React.StrictMode>

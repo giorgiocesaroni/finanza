@@ -6,6 +6,7 @@ import { List } from "./components/List";
 import { login, logout } from "./auth/auth-with-google";
 import { getAuthFromLocalStorage } from "./auth/auth-local-storage";
 import { subscribeDatabase } from "./repository/firebase-repository";
+import { Menu } from "./components/Menu";
 
 // Currently supported categories
 export const supportedCategories = [
@@ -17,7 +18,7 @@ export const supportedCategories = [
 ];
 
 export const App = () => {
-  const { context, updateContext, testDatabase, isOnline } =
+  const { context, updateContext, testDatabase, isOnline, isOpen, setOpen } =
     useContext(Context);
 
   useEffect(() => {
@@ -59,30 +60,33 @@ export const App = () => {
   }
 
   return (
-    <div className={"App" + (isOnline ? "" : " offline")}>
-      <Form />
-      <main>
-        {!context.auth && <Intro />}
-        {/* <Intro />
-        <Intro />
-        <Intro /> */}
-        <List title="Personal" data={context.database} />
-      </main>
-      <footer>
-        {!context.auth ? (
-          <button className="login" onClick={handleLogin}>
-            Login with Google
-          </button>
-        ) : (
-          <button className="login" onClick={handleLogout}>
-            Logout from {context.auth.user.displayName}
-          </button>
-        )}
-        <p className="copyright">
-          Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
-          rights reserved.
-        </p>
-      </footer>
-    </div>
+    <>
+      <Menu />
+      <div className={"App" + (isOnline ? "" : " offline") + (isOpen ? " disabled" : "")}>
+        <button onClick={() => setOpen(!isOpen)} className="open-menu">
+          Open Menu
+        </button>
+        <Form />
+        <main>
+          {!context.auth && <Intro />}
+          <List title="Personal" data={context.database} />
+        </main>
+        <footer>
+          {!context.auth ? (
+            <button className="login" onClick={handleLogin}>
+              Login with Google
+            </button>
+          ) : (
+            <button className="login" onClick={handleLogout}>
+              Logout from {context.auth.user.displayName}
+            </button>
+          )}
+          <p className="copyright">
+            Copyright &copy; {new Date().getFullYear()} Giorgio Cesaroni. All
+            rights reserved.
+          </p>
+        </footer>
+      </div>
+    </>
   );
 };
