@@ -15,13 +15,21 @@
     padding: .5em
     background-color: white
     opacity: .9
-    color: white
     top: 0
     left: 0
     transform: translateX(100%)
     width: 100%
     height: 100%
     transition: transform .5s ease
+    display: flex
+    flex-flow: column
+    align-items: center
+
+    img
+        width: 128px
+        height: 128px
+        border-radius: 50%
+        margin: 1rem 0
 
 .menu.open
     transform: translateX(0%)

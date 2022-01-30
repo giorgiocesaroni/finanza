@@ -62,7 +62,11 @@ export const App = () => {
   return (
     <>
       <Menu />
-      <div className={"App" + (isOnline ? "" : " offline") + (isOpen ? " disabled" : "")}>
+      <div
+        className={
+          "App" + (isOnline ? "" : " offline") + (isOpen ? " disabled" : "")
+        }
+      >
         <button onClick={() => setOpen(!isOpen)} className="open-menu">
           Open Menu
         </button>
