@@ -18,7 +18,7 @@
           box-sizing: border-box;
 }
 
-input {
+.App input {
   -webkit-appearance: none;
   -moz-appearance: none;
        appearance: none;
@@ -30,16 +30,16 @@ input {
   font-size: .9rem;
 }
 
-input:focus {
+.App input:focus {
   outline: none;
 }
 
-input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+.App input[type="number"]::-webkit-inner-spin-button, .App input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+.App input[type="number"] {
   -moz-appearance: textfield;
 }
 

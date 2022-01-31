@@ -25,11 +25,31 @@
     flex-flow: column
     align-items: center
 
-    img
-        width: 128px
-        height: 128px
+    .user-image
+        width: 64px
+        height: 64px
         border-radius: 50%
         margin: 1rem 0
+
+    .user-display-name
+        color: #303030
+
+    .user-email
+        font-weight: 500 !important
+
+.list-portfolios
+    background: #eee
+    border-radius: 1rem
+    margin: 1rem 0
+    padding: 1rem
+    display: flex
+    flex-flow: column
+    gap: .5rem
+
+    li
+        display: flex
+        gap: .5rem
+        align-items: center
 
 .menu.open
     transform: translateX(0%)
