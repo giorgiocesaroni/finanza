@@ -1,23 +1,29 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import { supportedCategories } from "../App.js";
 import { Context } from "../context/ContextWrapper";
-import { addEntry, updateEntry } from "../repository/firebase-repository";
+import { useFirestore } from "../repository/useFirestore.js";
 
 export const Form = () => {
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [price, setPrice] = useState("");
   const [notes, setNotes] = useState("");
+  const { addEntry, updateEntry } = useFirestore();
 
-  const { context, toggleEditing, testDatabaseDAO, isOnline } = useContext(Context);
+  const { context, toggleEditing, testDatabaseDAO, isOnline } =
+    useContext(Context);
   const amountInput = useRef(null);
 
   useEffect(() => {
     if (!context.state.editingId) return reset();
-    setCategory(context.database[context.state.editingId].category);
-    setDate(context.database[context.state.editingId].date);
-    setPrice(context.database[context.state.editingId].price);
-    setNotes(context.database[context.state.editingId].notes);
+    const editEntry =
+      context.database[context.state.portfolio].entries[
+        [context.state.editingId]
+      ];
+    setCategory(editEntry.category);
+    setDate(editEntry.date);
+    setPrice(editEntry.price);
+    setNotes(editEntry.notes);
   }, [context.state.editingId]);
 
   function focus() {
@@ -79,9 +85,15 @@ export const Form = () => {
     // Submit: create/update on logged user
     if (context.auth) {
       if (context.state.isEditing) {
-        updateEntry(context.auth.user.uid, context.state.editingId, entry);
+        updateEntry(
+          context.auth.user.uid,
+          context.state.portfolio,
+          context.state.editingId,
+          entry
+        );
       } else {
-        addEntry(context.auth.user.uid, entry);
+        // Choose default portfolio?
+        addEntry(context.auth.user.uid, "sldkjfwokjslueriywo", entry);
       }
       // Test mode (intro)
     } else {

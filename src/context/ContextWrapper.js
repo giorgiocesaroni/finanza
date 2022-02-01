@@ -15,12 +15,13 @@ export const ContextWrapper = (props) => {
 
   const [context, setContext] = useState({
     auth: null,
-    database: testDatabase,
     state: {
       isEditing: false,
       editingId: null,
     },
   });
+
+  const [database, setDatabase] = useState(testDatabase);
 
   const testDatabaseDAO = {
     addEntry: testAddEntry,
@@ -29,24 +30,34 @@ export const ContextWrapper = (props) => {
   };
 
   useEffect(() => {
-    updateContext({ database: testDatabase });
+    updateDatabase(testDatabase);
   }, [testDatabase]);
+
+  function updateDatabase(update) {
+    return setDatabase((prev) => ({ ...prev, ...update }));
+  }
 
   function updateContext(update) {
     return setContext((prev) => ({ ...prev, ...update }));
   }
 
-  function toggleEditing(id) {
+  function toggleEditing(id, portfolio) {
     if (id) {
-      return updateContext({ state: { isEditing: true, editingId: id } });
+      return updateContext({
+        state: { isEditing: true, editingId: id, portfolio: portfolio },
+      });
     }
-    return updateContext({ state: { isEditing: false, editingId: null } });
+    return updateContext({
+      state: { isEditing: false, editingId: null, portfolio: null },
+    });
   }
 
   return (
     <Context.Provider
       value={{
         context,
+        database,
+        updateDatabase,
         updateContext,
         toggleEditing,
         testDatabaseDAO,

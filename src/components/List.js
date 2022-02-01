@@ -3,9 +3,9 @@ import monthDay from "../utility/monthDay";
 import Summary from "./Summary";
 import accounting from "../utility/accounting";
 import { Context } from "../context/ContextWrapper";
-import { deleteEntry } from "../repository/firebase-repository";
 import ListHeader from "./ListHeader";
 import ListSearch from "./ListSearch";
+import { useFirestore } from "../repository/useFirestore";
 
 export const List = (props) => {
   const [state, setState] = useState({
@@ -14,13 +14,18 @@ export const List = (props) => {
     endOfListTop: true,
     endOfListBottom: true,
   });
-  const [filter, setFilter] = useState("");
-  const [data, setData] = useState(sortData(props.data));
+  const [data, setData] = useState(props.data);
+  const [filter, setFilter] = useState(null);
   const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
+  const { deleteEntry } = useFirestore();
 
   useEffect(() => {
-    setData(sortData(filterData(props.data)));
-  }, [props.data, state.sortBy, state.inverted, filter]);
+    console.log("List props changed ", props.data);
+  }, [props.data]);
+
+  // useEffect(() => {
+  //   setData(sortData(filterData(props.data)));
+  // }, [props.data, state.sortBy, state.inverted, filter]);
 
   function filterData(data) {
     const filteredKeys = Object.keys(data).filter((i) =>
@@ -50,12 +55,13 @@ export const List = (props) => {
     if (k.target.className.includes("delete")) return;
 
     const id = k.target.parentElement.id;
+    const portfolio = props.id;
 
     if (id === context.state.editingId) {
       return toggleEditing();
     }
 
-    return toggleEditing(id);
+    return toggleEditing(id, portfolio);
   }
 
   function sortData(data) {
@@ -100,6 +106,8 @@ export const List = (props) => {
     });
   }
 
+  // return <>{JSON.stringify(data)}</>
+
   return (
     <div className="element">
       <div className="title-search">
@@ -113,47 +121,36 @@ export const List = (props) => {
         inverted={state.inverted}
       />
       <div className="list-wrapper">
-        {/* <div
-          className={
-            "list-continues-bottom" + (!state.endOfListBottom ? " visible" : "")
-          }
-        ></div>
-        <div
-          className={
-            "list-continues-top" + (!state.endOfListTop ? " visible" : "")
-          }
-        ></div> */}
-
         <div className="list">
-          {data &&
-            Object.keys(data).map((k) => {
-              return (
-                <div
-                  className={
-                    context.state.isEditing && context.state.editingId === k
-                      ? "selected"
-                      : ""
-                  }
-                  key={k}
-                >
-                  <div className="entry" id={k} onClick={handleClick}>
-                    <span className="icon">{data[k].category}</span>
-                    <p>{monthDay(data[k].date)}</p>
-                    <p>{accounting.formatMoney(data[k].price)}</p>
-                    <p>{data[k].notes}</p>
-                    <span
-                      role="img"
-                      aria-label="emoji"
-                      id={k}
-                      onClick={() => handleDelete(k)}
-                      className="icon delete"
-                    >
-                      ❌
-                    </span>
-                  </div>
+          {Object.keys(data).map((k) => {
+            console.log(k);
+            return (
+              <div
+                className={
+                  context.state.isEditing && context.state.editingId === k
+                    ? "selected"
+                    : ""
+                }
+                key={k}
+              >
+                <div className="entry" id={k} onClick={handleClick}>
+                  <span className="icon">{data[k].category}</span>
+                  <p>{monthDay(data[k].date)}</p>
+                  <p>{accounting.formatMoney(data[k].price)}</p>
+                  <p>{data[k].notes}</p>
+                  <span
+                    role="img"
+                    aria-label="emoji"
+                    id={k}
+                    onClick={() => handleDelete(k)}
+                    className="icon delete"
+                  >
+                    ❌
+                  </span>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
