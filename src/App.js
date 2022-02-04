@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { Context } from "./context/ContextWrapper";
 import { Intro } from "./components/Intro";
 import { Form } from "./components/Form";
@@ -17,13 +17,9 @@ export const supportedCategories = [
 ];
 
 export const App = () => {
-  const database = useFirestore();
-  const { context, updateContext, isOnline, isOpen, setOpen, updateDatabase } =
+  const { context, updateContext, isOnline, isOpen, setOpen } =
     useContext(Context);
-
-  useEffect(() => {
-    console.log("App - database changed", database);
-  }, [database]);
+  const { portfolios } = useFirestore();
 
   useEffect(() => {
     const authFromLocalStorage = getAuthFromLocalStorage();
@@ -34,6 +30,10 @@ export const App = () => {
       });
     }
   }, [context.auth]);
+
+  useEffect(() => {
+    updateContext({ portfolios: portfolios });
+  }, [portfolios]);
 
   return (
     <>
@@ -50,15 +50,18 @@ export const App = () => {
         <main>
           {!context.auth && <Intro />}
 
-          {Object.keys(database).map((portfolioKey) => {
-            return (
-              <List
-                key={portfolioKey}
-                title={database[portfolioKey].name}
-                data={database[portfolioKey].entries}
-              />
-            );
-          })}
+          {context.portfolios &&
+            context.portfolios.map((portfolio) => {
+              return (
+                portfolio.enabled && (
+                  <List
+                    uid={context.auth?.user.uid}
+                    name={portfolio.name}
+                    portfolioId={portfolio.id}
+                  />
+                )
+              );
+            })}
         </main>
       </div>
     </>

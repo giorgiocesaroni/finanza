@@ -1,31 +1,31 @@
-import React, { useState, useContext, useEffect } from "react";
-import monthDay from "../utility/monthDay";
-import Summary from "./Summary";
-import accounting from "../utility/accounting";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../context/ContextWrapper";
+import { useFirestore } from "../repository/useFirestore";
+import usePortfolio from "../repository/usePortfolio";
+import accounting from "../utility/accounting";
+import monthDay from "../utility/monthDay";
+import { testDatabase } from "../utility/testDatabase";
 import ListHeader from "./ListHeader";
 import ListSearch from "./ListSearch";
-import { useFirestore } from "../repository/useFirestore";
+import Summary from "./Summary";
 
-export const List = (props) => {
+export const List = ({ uid = null, portfolioId = null, name = "Demo" }) => {
   const [state, setState] = useState({
     inverted: false,
     sortBy: "date",
     endOfListTop: true,
     endOfListBottom: true,
   });
-  const [data, setData] = useState(props.data);
-  const [filter, setFilter] = useState(null);
-  const { context, toggleEditing, testDatabaseDAO } = useContext(Context);
+  const portfolio = usePortfolio(uid, portfolioId);
+  const [data, setData] = useState(portfolio ?? testDatabase);
+  const [filter, setFilter] = useState("");
+  const { context, database, toggleEditing, testDatabaseDAO } =
+    useContext(Context);
   const { deleteEntry } = useFirestore();
 
   useEffect(() => {
-    console.log("List props changed ", props.data);
-  }, [props.data]);
-
-  // useEffect(() => {
-  //   setData(sortData(filterData(props.data)));
-  // }, [props.data, state.sortBy, state.inverted, filter]);
+    setData(filterData(sortData(data)));
+  }, [state, portfolio, filter]);
 
   function filterData(data) {
     const filteredKeys = Object.keys(data).filter((i) =>
@@ -40,28 +40,27 @@ export const List = (props) => {
     return filteredData;
   }
 
-  function handleDelete(id) {
+  function handleDelete(editingId) {
     toggleEditing();
 
     // Intro mode
     if (!context.auth) {
-      return testDatabaseDAO.deleteEntry(id);
+      return testDatabaseDAO.deleteEntry(editingId);
     }
 
-    return deleteEntry(context.auth.user.uid, id);
+    return deleteEntry(portfolioId, editingId);
   }
 
   function handleClick(k) {
     if (k.target.className.includes("delete")) return;
 
-    const id = k.target.parentElement.id;
-    const portfolio = props.id;
+    const entryId = k.target.parentElement.id;
 
-    if (id === context.state.editingId) {
+    if (entryId === context.state.editingId) {
       return toggleEditing();
     }
 
-    return toggleEditing(id, portfolio);
+    return toggleEditing(portfolioId, entryId, portfolio[entryId]);
   }
 
   function sortData(data) {
@@ -106,12 +105,10 @@ export const List = (props) => {
     });
   }
 
-  // return <>{JSON.stringify(data)}</>
-
   return (
     <div className="element">
       <div className="title-search">
-        <h2 className="title">{props.title}</h2>
+        <h2 className="title">{name}</h2>
         <ListSearch setFilter={setFilter} />
       </div>
       <Summary data={data} />
@@ -123,7 +120,6 @@ export const List = (props) => {
       <div className="list-wrapper">
         <div className="list">
           {Object.keys(data).map((k) => {
-            console.log(k);
             return (
               <div
                 className={

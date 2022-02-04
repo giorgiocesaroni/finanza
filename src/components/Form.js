@@ -12,14 +12,18 @@ export const Form = () => {
 
   const { context, toggleEditing, testDatabaseDAO, isOnline } =
     useContext(Context);
+  const [portfolioNumber, setPortfolioNumber] = useState(0);
   const amountInput = useRef(null);
+
+  // useEffect(() => {
+  //   if (context.portfolios) {
+  //     setPortfolio(context.portfolios[0].name);
+  //   }
+  // }, [context.portfolios]);
 
   useEffect(() => {
     if (!context.state.editingId) return reset();
-    const editEntry =
-      context.database[context.state.portfolio].entries[
-        [context.state.editingId]
-      ];
+    const editEntry = context.state.editingEntry;
     setCategory(editEntry.category);
     setDate(editEntry.date);
     setPrice(editEntry.price);
@@ -86,14 +90,13 @@ export const Form = () => {
     if (context.auth) {
       if (context.state.isEditing) {
         updateEntry(
-          context.auth.user.uid,
-          context.state.portfolio,
+          context.state.editingPortfolio,
           context.state.editingId,
           entry
         );
       } else {
         // Choose default portfolio?
-        addEntry(context.auth.user.uid, "sldkjfwokjslueriywo", entry);
+        addEntry(context.portfolios[portfolioNumber].id, entry);
       }
       // Test mode (intro)
     } else {
@@ -107,20 +110,36 @@ export const Form = () => {
     reset();
   }
 
+  function cyclePortfolios() {
+    if (!context.portfolios) return;
+    const length = context.portfolios.length;
+    if (portfolioNumber === length - 1) return setPortfolioNumber(0);
+    setPortfolioNumber((portfolio) => portfolio + 1);
+  }
+
   return (
     <>
       <form id="entry-form" onKeyDown={handleSubmit}>
         {!isOnline && <div className="element is-offline">You're offline.</div>}
         <div className="display">
           <>
-            <input
-              value={date}
-              onChange={handleDateChange}
-              type="text"
-              placeholder="Date"
-              name="date"
-              className="date"
-            />
+            <section>
+              <input
+                value={date}
+                onChange={handleDateChange}
+                type="text"
+                placeholder="Date"
+                name="date"
+                className="date"
+              />
+              {context.portfolios && (
+                <p onClick={cyclePortfolios}>
+                  ➡ {context.portfolios[portfolioNumber].name}
+                </p>
+              )}
+              {/* {context.portfolios && <p onClick={cyclePortfolios}>{context.portfolios[portfolio]}</p>} */}
+            </section>
+
             <input
               value={notes}
               onChange={handleNotesChange}

@@ -32,5 +32,5 @@ export async function login() {
 
 export function logout() {
   removeAuthFromLocalStorage();
-  return { auth: null, database: testDatabase };
+  return { auth: null, database: testDatabase, portfolios: null };
 }

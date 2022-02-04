@@ -1,11 +1,16 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Context } from "../context/ContextWrapper";
 import Authentication from "./Authentication";
+import { useFirestore } from "../repository/useFirestore";
 
 export function Menu() {
   const { context, isOpen, setOpen } = useContext(Context);
+  const { toggleEnabled } = useFirestore();
   const user = context.auth?.user;
+
+  function handleCheck(e) {
+    toggleEnabled(e.target.id);
+  }
 
   return (
     <div className={"menu-plate" + (isOpen ? " blurred" : " disabled")}>
@@ -23,18 +28,18 @@ export function Menu() {
         {/* List of portfolios */}
         <ul className="list-portfolios">
           <h3>Your Portfolios</h3>
-          <li>
-            <input type="checkbox" name="scales" />
-            <label for="scales">Portfolio 1</label>
-          </li>
-          <li>
-            <input type="checkbox" name="scales" />
-            <label for="scales">Portfolio 2</label>
-          </li>
-          <li>
-            <input type="checkbox" name="scales" />
-            <label for="scales">Portfolio 3</label>
-          </li>
+          {context.portfolios?.map((p) => (
+            <li>
+              <input
+                onClick={handleCheck}
+                type="checkbox"
+                name={p.name}
+                id={p.id}
+                checked={p.enabled}
+              />
+              <label for={p.name}>{p.name}</label>
+            </li>
+          ))}
         </ul>
 
         <Authentication />

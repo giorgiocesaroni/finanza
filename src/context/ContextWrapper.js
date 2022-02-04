@@ -41,10 +41,15 @@ export const ContextWrapper = (props) => {
     return setContext((prev) => ({ ...prev, ...update }));
   }
 
-  function toggleEditing(id, portfolio) {
-    if (id) {
+  function toggleEditing(portfolioId, entryId, entry) {
+    if (entryId) {
       return updateContext({
-        state: { isEditing: true, editingId: id, portfolio: portfolio },
+        state: {
+          isEditing: true,
+          editingEntry: entry,
+          editingId: entryId,
+          editingPortfolio: portfolioId,
+        },
       });
     }
     return updateContext({
@@ -58,6 +63,7 @@ export const ContextWrapper = (props) => {
         context,
         database,
         updateDatabase,
+        setDatabase,
         updateContext,
         toggleEditing,
         testDatabaseDAO,
