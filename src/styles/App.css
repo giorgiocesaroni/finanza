@@ -181,6 +181,14 @@ main {
   transition: border .35s ease-in-out;
 }
 
+#entry-form .display section {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr auto;
+      grid-template-columns: 1fr auto;
+  gap: 1rem;
+}
+
 #entry-form .display #display-amount {
   text-align: right;
   font-size: 2rem;

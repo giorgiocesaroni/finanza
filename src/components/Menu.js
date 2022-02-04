@@ -17,16 +17,17 @@ export function Menu() {
       <div className={"menu" + (isOpen ? " open" : "")}>
         <button onClick={() => setOpen(false)}>Close Menu</button>
 
-        <img
+        {user && <img
           className="user-image"
           src={user?.photoURL}
           alt="User profile image"
-        />
+        />}
         <h2 className="user-display-name">Welcome, {user?.displayName}</h2>
         <h3 className="user-email">{user?.email}</h3>
 
         {/* List of portfolios */}
-        <ul className="list-portfolios">
+
+        {context.portfolios && <ul className="list-portfolios">
           <h3>Your Portfolios</h3>
           {context.portfolios?.map((p) => (
             <li>
@@ -40,7 +41,7 @@ export function Menu() {
               <label for={p.name}>{p.name}</label>
             </li>
           ))}
-        </ul>
+        </ul>}
 
         <Authentication />
 

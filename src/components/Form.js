@@ -134,10 +134,9 @@ export const Form = () => {
               />
               {context.portfolios && (
                 <p onClick={cyclePortfolios}>
-                  ➡ {context.portfolios[portfolioNumber].name}
+                  {context.portfolios[portfolioNumber].name}
                 </p>
               )}
-              {/* {context.portfolios && <p onClick={cyclePortfolios}>{context.portfolios[portfolio]}</p>} */}
             </section>
 
             <input

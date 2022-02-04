@@ -24,7 +24,7 @@ export const List = ({ uid = null, portfolioId = null, name = "Demo" }) => {
   const { deleteEntry } = useFirestore();
 
   useEffect(() => {
-    setData(filterData(sortData(data)));
+    setData(filterData(sortData(portfolio)));
   }, [state, portfolio, filter]);
 
   function filterData(data) {
