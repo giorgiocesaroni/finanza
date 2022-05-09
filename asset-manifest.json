@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/finanza/static/css/main.65cee786.chunk.css",
-    "main.js": "/finanza/static/js/main.52357c7c.chunk.js",
-    "main.js.map": "/finanza/static/js/main.52357c7c.chunk.js.map",
-    "runtime-main.js": "/finanza/static/js/runtime-main.ff181769.js",
-    "runtime-main.js.map": "/finanza/static/js/runtime-main.ff181769.js.map",
-    "static/js/2.6b227958.chunk.js": "/finanza/static/js/2.6b227958.chunk.js",
-    "static/js/2.6b227958.chunk.js.map": "/finanza/static/js/2.6b227958.chunk.js.map",
-    "index.html": "/finanza/index.html",
-    "precache-manifest.745e39c30ab577ac45a0020e995d0864.js": "/finanza/precache-manifest.745e39c30ab577ac45a0020e995d0864.js",
-    "service-worker.js": "/finanza/service-worker.js",
-    "static/css/main.65cee786.chunk.css.map": "/finanza/static/css/main.65cee786.chunk.css.map",
-    "static/js/2.6b227958.chunk.js.LICENSE.txt": "/finanza/static/js/2.6b227958.chunk.js.LICENSE.txt"
+    "main.css": "/finanza-react/static/css/main.65cee786.chunk.css",
+    "main.js": "/finanza-react/static/js/main.f9d26342.chunk.js",
+    "main.js.map": "/finanza-react/static/js/main.f9d26342.chunk.js.map",
+    "runtime-main.js": "/finanza-react/static/js/runtime-main.909e7a13.js",
+    "runtime-main.js.map": "/finanza-react/static/js/runtime-main.909e7a13.js.map",
+    "static/js/2.8a662031.chunk.js": "/finanza-react/static/js/2.8a662031.chunk.js",
+    "static/js/2.8a662031.chunk.js.map": "/finanza-react/static/js/2.8a662031.chunk.js.map",
+    "index.html": "/finanza-react/index.html",
+    "precache-manifest.3d782cd18c2f4dfce0a43393c7442bbb.js": "/finanza-react/precache-manifest.3d782cd18c2f4dfce0a43393c7442bbb.js",
+    "service-worker.js": "/finanza-react/service-worker.js",
+    "static/css/main.65cee786.chunk.css.map": "/finanza-react/static/css/main.65cee786.chunk.css.map",
+    "static/js/2.8a662031.chunk.js.LICENSE.txt": "/finanza-react/static/js/2.8a662031.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.ff181769.js",
-    "static/js/2.6b227958.chunk.js",
+    "static/js/runtime-main.909e7a13.js",
+    "static/js/2.8a662031.chunk.js",
     "static/css/main.65cee786.chunk.css",
-    "static/js/main.52357c7c.chunk.js"
+    "static/js/main.f9d26342.chunk.js"
   ]
 }
