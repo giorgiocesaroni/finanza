@@ -102,6 +102,10 @@ export const App = () => {
                         title="Last Month"
                         data={filterLastMonth(context.database)}
                     />
+                    <List
+                        title="Up To Date"
+                        data={context.database}
+                    />
                 </main>
             </div>
         </>
