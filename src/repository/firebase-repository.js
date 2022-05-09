@@ -1,4 +1,4 @@
-import { db } from "../config/firebase";
+import { db } from "../config/Firebase";
 import {
   query,
   collection,

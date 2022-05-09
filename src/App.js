@@ -10,64 +10,100 @@ import { Menu } from "./components/Menu";
 
 // Currently supported categories
 export const supportedCategories = [
-  { pizza: "🍕" },
-  { gas: "⛽️" },
-  { utility: "⚙️" },
-  { groceries: "🥑" },
-  { income: "💵" },
+    { pizza: "🍕" },
+    { gas: "⛽️" },
+    { utility: "⚙️" },
+    { groceries: "🥑" },
+    { income: "💵" },
 ];
 
 export const App = () => {
-  const {
-    context,
-    updateContext,
-    isOnline,
-    isOpen,
-    setOpen,
-    handleLogin,
-    handleLogout,
-  } = useContext(Context);
+    const {
+        context,
+        updateContext,
+        isOnline,
+        isOpen,
+        setOpen,
+        handleLogin,
+        handleLogout,
+    } = useContext(Context);
 
-  useEffect(() => {
-    const authFromLocalStorage = getAuthFromLocalStorage();
-
-    if (context.auth?.user) {
-      const unsubscribe = subscribeDatabase(
-        context.auth.user.uid,
-        updateContext
-      );
-      return unsubscribe;
-    }
-
-    if (!context.auth && authFromLocalStorage) {
-      updateContext({
-        auth: authFromLocalStorage,
-      });
-      const unsubscribe = subscribeDatabase(
-        authFromLocalStorage.user.uid,
-        updateContext
-      );
-      return unsubscribe;
-    }
-  }, [context.auth]);
-
-  return (
-    <>
-      <Menu />
-      <div
-        className={
-          "App" + (isOnline ? "" : " offline") + (isOpen ? " disabled" : "")
+    function filterThisMonth(data) {
+        if (!data) return;
+        const filteredObject = {};
+        for (const key in data) {
+            if (new Date(data[key].date).getMonth() === new Date().getMonth()) {
+                filteredObject[key] = data[key];
+            }
         }
-      >
-        <button onClick={() => setOpen(!isOpen)} className="open-menu">
-          Open Menu
-        </button>
-        <Form />
-        <main>
-          {!context.auth && <Intro />}
-          <List title="Personal" data={context.database} />
-        </main>
-      </div>
-    </>
-  );
+        return filteredObject;
+    }
+
+    function filterLastMonth(data) {
+        if (!data) return;
+        const filteredObject = {};
+        for (const key in data) {
+            if (
+                new Date(data[key].date).getMonth() ===
+                    new Date().getMonth() - 1 &&
+                new Date(data[key].date).getFullYear() ===
+                    new Date().getFullYear()
+            ) {
+                filteredObject[key] = data[key];
+            }
+        }
+        return filteredObject;
+    }
+
+    useEffect(() => {
+        const authFromLocalStorage = getAuthFromLocalStorage();
+
+        if (context.auth?.user) {
+            const unsubscribe = subscribeDatabase(
+                context.auth.user.uid,
+                updateContext
+            );
+            return unsubscribe;
+        }
+
+        if (!context.auth && authFromLocalStorage) {
+            updateContext({
+                auth: authFromLocalStorage,
+            });
+            const unsubscribe = subscribeDatabase(
+                authFromLocalStorage.user.uid,
+                updateContext
+            );
+            return unsubscribe;
+        }
+    }, [context.auth]);
+
+    return (
+        <>
+            <Menu />
+            <div
+                className={
+                    "App" +
+                    (isOnline ? "" : " offline") +
+                    (isOpen ? " disabled" : "")
+                }
+            >
+                <button onClick={() => setOpen(!isOpen)} className="open-menu">
+                    Open Menu
+                </button>
+                <Form />
+                <main>
+                    {!context.auth && <Intro />}
+                    <List
+                        title="This Month"
+                        data={filterThisMonth(context.database)}
+                    />
+                    <List
+                        title="Last Month"
+                        data={filterLastMonth(context.database)}
+                    />
+                </main>
+            </div>
+        </>
+    );
 };
