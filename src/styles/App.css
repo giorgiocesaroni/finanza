@@ -562,4 +562,8 @@ footer {
     max-width: 15ch;
   }
 }
+
+.list {
+  overscroll-behavior: contain;
+}
 /*# sourceMappingURL=App.css.map */
