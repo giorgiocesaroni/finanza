@@ -1,22 +1,23 @@
 {
   "files": {
-    "main.css": "/finanza-react/static/css/main.6950f6b4.chunk.css",
-    "main.js": "/finanza-react/static/js/main.3221c608.chunk.js",
-    "main.js.map": "/finanza-react/static/js/main.3221c608.chunk.js.map",
+    "main.css": "/finanza-react/static/css/main.3918dbc5.chunk.css",
+    "main.js": "/finanza-react/static/js/main.0f40b0be.chunk.js",
+    "main.js.map": "/finanza-react/static/js/main.0f40b0be.chunk.js.map",
     "runtime-main.js": "/finanza-react/static/js/runtime-main.909e7a13.js",
     "runtime-main.js.map": "/finanza-react/static/js/runtime-main.909e7a13.js.map",
-    "static/js/2.8a662031.chunk.js": "/finanza-react/static/js/2.8a662031.chunk.js",
-    "static/js/2.8a662031.chunk.js.map": "/finanza-react/static/js/2.8a662031.chunk.js.map",
+    "static/js/2.7afda257.chunk.js": "/finanza-react/static/js/2.7afda257.chunk.js",
+    "static/js/2.7afda257.chunk.js.map": "/finanza-react/static/js/2.7afda257.chunk.js.map",
     "index.html": "/finanza-react/index.html",
-    "precache-manifest.dbf622db3b72eba69f6267e563e73d55.js": "/finanza-react/precache-manifest.dbf622db3b72eba69f6267e563e73d55.js",
+    "precache-manifest.d181148ffb9f6abd59b8289644bf10c2.js": "/finanza-react/precache-manifest.d181148ffb9f6abd59b8289644bf10c2.js",
     "service-worker.js": "/finanza-react/service-worker.js",
-    "static/css/main.6950f6b4.chunk.css.map": "/finanza-react/static/css/main.6950f6b4.chunk.css.map",
-    "static/js/2.8a662031.chunk.js.LICENSE.txt": "/finanza-react/static/js/2.8a662031.chunk.js.LICENSE.txt"
+    "static/css/main.3918dbc5.chunk.css.map": "/finanza-react/static/css/main.3918dbc5.chunk.css.map",
+    "static/js/2.7afda257.chunk.js.LICENSE.txt": "/finanza-react/static/js/2.7afda257.chunk.js.LICENSE.txt",
+    "static/js/main.0f40b0be.chunk.js.LICENSE.txt": "/finanza-react/static/js/main.0f40b0be.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.909e7a13.js",
-    "static/js/2.8a662031.chunk.js",
-    "static/css/main.6950f6b4.chunk.css",
-    "static/js/main.3221c608.chunk.js"
+    "static/js/2.7afda257.chunk.js",
+    "static/css/main.3918dbc5.chunk.css",
+    "static/js/main.0f40b0be.chunk.js"
   ]
 }
